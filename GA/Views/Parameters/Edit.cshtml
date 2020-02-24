@@ -1,0 +1,87 @@
+﻿@model GALibrary.Models.Parameter
+
+@{
+    ViewData["Title"] = "Edição dos parametros do sistema";
+}
+
+<h1>Edição dos parametros do sistema</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <p><label class="control-label font-weight-bold">Cadastro de caminhos</label></p>
+            <div class="form-group">
+                <label asp-for="PathBackup" class="control-label"></label>
+                <input asp-for="PathBackup" class="form-control" />
+                <span asp-validation-for="PathBackup" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PathUpdate" class="control-label"></label>
+                <input asp-for="PathUpdate" class="form-control" />
+                <span asp-validation-for="PathUpdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PathLog" class="control-label"></label>
+                <input asp-for="PathLog" class="form-control" />
+                <span asp-validation-for="PathLog" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PathTemp" class="control-label"></label>
+                <input asp-for="PathTemp" class="form-control" />
+                <span asp-validation-for="PathTemp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MailHeader" class="control-label"></label>
+                <input asp-for="MailHeader" class="form-control" />
+                <span asp-validation-for="MailHeader" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MailFooter" class="control-label"></label>
+                <input asp-for="MailFooter" class="form-control" />
+                <span asp-validation-for="MailFooter" class="text-danger"></span>
+            </div>
+            <hr />
+            <br />
+            <p><label class="control-label font-weight-bold">Cadastro de logs</label></p>
+            <div class="form-group">
+                <label asp-for="LogLevelApplication" class="control-label"></label>
+                <select asp-for="LogLevelApplication" class="form-control col-md-3" asp-items="ViewBag.LogLevelApplication"></select>
+                <span asp-validation-for="LogLevelApplication" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LogLevelUpdate" class="control-label"></label>
+                <select asp-for="LogLevelUpdate" class="form-control col-md-3" asp-items="ViewBag.LogLevelUpdate"></select>
+                <span asp-validation-for="LogLevelUpdate" class="text-danger"></span>
+            </div>
+            <br />
+            <hr />
+            <p><label class="control-label font-weight-bold">Outros</label></p>
+            <div class="form-group">
+                <label asp-for="ItensPage" class="control-label"></label>
+                <input asp-for="ItensPage" class="form-control col-md-3 " />
+                <span asp-validation-for="ItensPage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RetentionTime" class="control-label"></label>
+                <input asp-for="RetentionTime" class="form-control col-md-3 " />
+                <span asp-validation-for="RetentionTime" class="text-danger"></span>
+                *em dias
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details"  asp-route-id="1">Voltar</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

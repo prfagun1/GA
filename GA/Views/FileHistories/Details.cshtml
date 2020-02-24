@@ -1,0 +1,50 @@
+﻿@model GALibrary.Models.FileHistory
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>FileHistory</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FileName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FileName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Folder)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Folder)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Size)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Size)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Update)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Update.Name)
+        </dd>
+    </dl>
+</div>
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>
+

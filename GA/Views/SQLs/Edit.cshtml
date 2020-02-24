@@ -1,0 +1,144 @@
+﻿@model GALibrary.Models.SQL
+
+@{
+    ViewData["Title"] = "Edição do script de banco " + @Model.Name;
+}
+
+<h1>Edição do script de banco @Model.Name</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DatabaseId" class="control-label"></label>
+                <select asp-for="DatabaseId" class="form-control" id="sqlDatabaseId" name="sqlDatabaseId" asp-items="ViewBag.sqlDatabaseId"></select>
+                <div class="text-danger" id="sqlDatabaseIdError"></div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                <select asp-for="Type" class="form-control col-md-3" asp-items="ViewBag.sqlType" id="sqlType" name="sqlType" onchange="ExibeTipoSQL()"></select>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="divSQLScript">
+                <label asp-for="SQLScript" class="control-label"></label>
+                <textarea asp-for="SQLScript" class="form-control multiLine"></textarea>
+                <span asp-validation-for="SQLScript" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" id="divSQLArquivo">
+                <div class="form-group">
+                    <div class="control-label form-group ">Arquivo atual</div>
+                    @{
+                        String mensagem = "";
+                        if (Model.FilesRemoved == true || Model.Type == 2)
+                        {
+                            mensagem = "Este arquivo já foi apagado do servidor pelo processo de remoção de dados antigos ou ainda não foi cadastrado";
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("DownloadFile", new {sqlId = Model.Id})">
+                                <span class="fa fa-download btn btn-success"> Download dos arquivos SQL</span>
+                            </a>
+                        }
+                    }
+                    @mensagem
+                </div>
+                <div class="control-label form-group ">Arquivo(s)</div>
+                <div class="input-group form-group sql-div-upload">
+                    <input type="text" name="sqlFileNames" id="sqlFileNames" class="form-control upload-form-size" readonly="readonly">
+                    <label for="sqlFilesUpload" class="btn btn-success"><span class="fa fa-upload" aria-hidden="true"></span> Selecione um ou mais arquivos SQL </label>
+                    *Selecione somente arquivos .sql. Caso este campo fique em branco os arquivos atuais não serão alterados.
+                    <input id="sqlFilesUpload" name="sqlFilesUpload" onchange="setaArquivoUpload()" style="visibility:hidden;" type="file" accept=".sql" multiple>
+                </div>
+                <div class="text-danger" id="sqlFilesErro"></div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Enable" class="control-label"></label>
+                <select asp-for="Enable" class="form-control col-md-4" asp-items="ViewBag.sqlEnabled"></select>
+                <span asp-validation-for="Enable" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-success" onclick="ValidaDados()" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+<script type="text/javascript">
+
+    ExibeTipoSQL();
+
+
+    function ValidaDados() {
+
+        var sqlDatabaseId = $('#sqlDatabaseId option:selected').val();
+
+        $("#sqlDatabaseIdError").html("");
+
+        if (sqlDatabaseId === undefined || sqlDatabaseId === '') {
+            $("#sqlDatabaseIdError").html('<p>É necessário selecionar um banco de dados</p>');
+        }
+    }
+
+    $(document).ready(function () {
+        $("#sqlDatabaseId").select2({
+            placeholder: "Selecione um banco de dados",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+    });
+
+    function setaArquivoUpload() {
+        var sqlFilesUpload = $("#sqlFilesUpload").get(0);
+        var nomeArquivos = '';
+
+        for (i = 0; i < sqlFilesUpload.files.length; i++) {
+            if (sqlFilesUpload.files[i].name.toUpperCase().endsWith(".SQL")) {
+                nomeArquivos += sqlFilesUpload.files[i].name + '; ';
+            }
+        }
+        nomeArquivos = nomeArquivos.slice(0, -2)
+
+        if (sqlFilesUpload.files.length === 1) {
+            $("#sqlFileNames").val(sqlFilesUpload.files.length + ' arquivo selecionado. Nome: ' + nomeArquivos);
+        }
+        else {
+            $("#sqlFileNames").val(sqlFilesUpload.files.length + ' arquivos selecionados. Nomes: ' + nomeArquivos);
+        }
+    }
+
+    function ExibeTipoSQL() {
+        var sqlType = $('#sqlType option:selected').val();
+
+        switch (sqlType) {
+            case "1":
+                $("#divSQLArquivo").show();
+                $("#divSQLScript").hide();
+                break;
+            case "2":
+                $("#divSQLArquivo").hide();
+                $("#divSQLScript").show();
+                break;
+        }
+    }
+
+</script>

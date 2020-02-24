@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "font-awesome@4.7.0",
+      "destination": "wwwroot/font-awesome/"
+    },
+    {
+      "library": "jquery@3.3.1",
+      "destination": "wwwroot/jquery/"
+    },
+    {
+      "library": "select2@4.0.5",
+      "destination": "wwwroot/select2/"
+    },
+    {
+      "library": "select2-bootstrap-theme@0.1.0-beta.10",
+      "destination": "wwwroot/select2-bootstrap-theme/"
+    },
+    {
+      "provider": "filesystem",
+      "library": "C:\\Users\\prfagund\\Desktop\\select2-bootstrap4-theme-1.0.2\\dist",
+      "destination": "wwwroot/select2/css/"
+    },
+    {
+      "library": "jquery.inputmask@3.3.4",
+      "destination": "wwwroot/jquery.inputmask/"
+    }
+  ]
+}

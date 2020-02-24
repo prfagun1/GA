@@ -1,0 +1,60 @@
+﻿@model GALibrary.Models.Server
+
+@{
+    ViewData["Title"] = "Edição do servidor " + @Model.Name;
+}
+
+<h1>Edição do servidor @Model.Name</h1>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div class="form-group">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    Nome do servidor
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control multiLine"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="OSId" class="control-label"></label>
+                    <select asp-for="OSId" asp-items="ViewBag.OS" class="form-control">
+                    </select>
+                    <span asp-validation-for="OSId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="ServerUserId" class="control-label"></label>
+                    <select asp-for="ServerUserId" asp-items="ViewBag.ServerUser" class="form-control">
+                    </select>
+                    <span asp-validation-for="ServerUserId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Enable" class="control-label"></label>
+                    <select asp-for="Enable" asp-items="ViewBag.Enable" class="form-control">
+                    </select>
+                    <span asp-validation-for="Enable" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

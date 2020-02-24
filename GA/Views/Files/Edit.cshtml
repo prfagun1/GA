@@ -1,0 +1,214 @@
+﻿@model GALibrary.Models.File
+
+@{
+    ViewData["Title"] = "Edição do arquivo " + @Model.Name;
+}
+
+<h1>Edição do arquivo @Model.Name</h1>
+
+<form asp-action="Edit" enctype="multipart/form-data" method="post">
+    <div class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input asp-for="FileName" hidden />
+        <input asp-for="FilesRemoved" hidden />
+        <div class="col-md-12 form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control listBoxSelectionForm" id="FilesName" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="col-md-12 listBoxSelectionForm form-group">
+            <label asp-for="ApplicationId" class="control-label"></label>
+            <select asp-for="ApplicationId" class="form-control listBoxSelectionForm" asp-items="ViewBag.applicationIdFile" id="ApplicationIdFile" name="ApplicationIdFile" onchange="GetFolderFiles()">
+                <option selected></option>
+            </select>
+            <div class="text-danger" id="ApplicationIdFileError"></div>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label asp-for="Enable" class="control-label"></label>
+            <select asp-for="Enable" class="form-control col-md-2" asp-items="ViewBag.EnabledFile"></select>
+            <span asp-validation-for="Enable" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-12 listBoxSelectionform form-group">
+            <table class="listBoxSelectionTable">
+                <tr>
+                    <td>
+                        <p>Diretórios disponíveis</p>
+                        <select asp-for="Application.Folder" class="form-control form-control-range listBoxSelection" id="FoldersId" asp-items="ViewBag.FileFolderEsquerda"></select>
+
+                    </td>
+                    <td align="center" class="listBoxSelectionArrows">
+                        <p><br /></p>
+                        <a onclick="AddFolder()" class="btn"> <span class="fa fa-2x fa-chevron-right" aria-hidden="true"></span> </a>
+                        <a onclick="RemoveFolder()" class="btn"> <span class="fa fa-2x fa-chevron-left" aria-hidden="true"></span> </a>
+                    </td>
+                    <td>
+                        <p>Diretórios selecionados</p>
+                        <select asp-for="FileFolder" class="form-control listBoxSelection" id="Folders" asp-items="ViewBag.FileFolderDireita"></select>
+
+                    </td>
+                </tr>
+
+            </table>
+            <div class="text-danger" id="FoldersError">@ViewBag.ErroPastas</div>
+        </div>
+
+        <div class="form-group col-md-12">
+            <div class="control-label form-group ">Arquivo atual</div>
+            @{
+                String mensagem = "";
+
+                if (Model.FilesRemoved == true)
+                {
+                    mensagem = "Este arquivo já foi apagado do servidor pelo processo de remoção de dados antigos";
+                }
+                else
+                {
+                    <a href="@Url.Action("DownloadFile", new {
+                        fileId = Model.Id
+                    })">
+                        <span class="fa fa-download btn btn-success">@Model.FileName</span>
+                    </a>
+                }
+            }
+            <div class="text-danger">@mensagem</div><br />
+        </div>
+
+        <div class="col-md-12 form-group">
+            <div class="control-label form-group ">Arquivo</div>
+            <div class="input-group form-group">
+                <input type="text" name="fileName" id="fileName" class="form-control upload-form-size" readonly="readonly">
+                <label for="FilesFiles" class="btn btn-success"><span class="fa fa-upload" aria-hidden="true"></span> Selecione um arquivo </label>
+                <input id="FilesFiles" name="FilesFiles" onchange="setaArquivoUpload()" style="visibility:hidden;" type="file" accept=".zip,application/zip">
+            </div>
+            <p>
+                *Selecione somente um arquivo .zip com a estrutura da atualização. Caso este campo fique em branco o arquivo atual não será alterado.
+            </p>
+
+            <div class="text-danger" id="FileNameError"></div>
+        </div>
+
+
+        <div class="form-group col-md-12">
+            <input type="submit" value="Salvar" class="btn btn-success" onclick="SelectFolder()" />
+        </div>
+
+        <div class="form-group col-md-12 font-weight-bold">
+            <div class="text-success" id="divStatusOK"></div>
+            <div class="text-danger" id="divStatusErro"></div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type="text/javascript">
+
+    function SelectFolder() {
+        var lista = document.getElementById("Folders");
+        for (i = 0; i < lista.length; i++) {
+            lista.options[i].selected = true;
+        }
+        ValidaDados();
+    }
+
+    function ValidaDados() {
+        var FileName = $('#FilesName').val();
+        var fileApplicationId = $('#ApplicationIdFile option:selected').val();
+        var filesDirectory = $('#FilesDirectory').val();
+        var folders = document.getElementById("Folders");
+        var foldersSize = folders.options.length;
+        var fileName = $('#fileName').val();
+
+        $("#FilesDirectoryError").html("");
+        $("#ApplicationIdFileError").html("");
+        $("#FileNameError").html("");
+        $("#FoldersError").html("");
+
+        if (fileApplicationId === undefined || fileApplicationId === '') {
+            $("#ApplicationIdFileError").html('<p>É necessário selecionar a aplicação</p>');
+        }
+
+        if (foldersSize == 0) {
+            $("#FoldersError").html('<p>É necessário selecionar ao menos uma pasta</p>');
+        }
+
+    }
+
+    function setaArquivoUpload() {
+        var name = document.getElementById("FilesFiles").files[0].name;
+        if (name.endsWith(".zip")) {
+            $("#fileName").val(name);
+        }
+        else {
+            $("#fileName").val("");
+        }
+    }
+
+    $(document).ready(function () {
+        $("#ApplicationIdFile").select2({
+            placeholder: "Selecione uma aplicação",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+    });
+
+    function GetFolderFiles() {
+        $("#FoldersId").empty()
+        $("#Folders").empty()
+
+        var testaAplicacao1 = $("#ApplicationIdFile option:selected").val();
+        var testaAplicacao2 = $("#ApplicationId option:selected").val();
+
+        if (testaAplicacao1 === '') {
+            applicationID = testaAplicacao2;
+        }
+        else {
+            applicationID = testaAplicacao1;
+        }
+
+        $("#FoldersId").empty()
+        $.getJSON("/Files/LoadDropDownList/?applicationID=" + applicationID, function (data) {
+            var items;
+            $.each(data, function (i, data) {
+                items += "<option value='" + data.Id + "'>" + data.Path + "</option>";
+            });
+            $("#FoldersId").html(items);
+            $("#FolderId option:selected").prop("selected", false)
+        });
+
+    }
+
+
+    function AddFolder() {
+        var selectedOpts = $('#FoldersId option:selected');
+        $('#Folders').append($(selectedOpts).clone());
+        $(selectedOpts).remove();
+
+        selectSort('#Folders', 'text', 'asc');
+
+        $("#Folders option:selected").prop("selected", false)
+        $("#FoldersId option:selected").prop("selected", false)
+    }
+
+    function RemoveFolder() {
+        var selectedOpts = $('#Folders option:selected');
+        $('#FoldersId').append($(selectedOpts).clone());
+        $(selectedOpts).remove();
+
+        selectSort('#FoldersId', 'text', 'asc');
+
+        $("#Folders option:selected").prop("selected", false)
+        $("#FoldersId option:selected").prop("selected", false)
+    }
+
+
+</script>

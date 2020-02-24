@@ -1,0 +1,94 @@
+﻿@model GALibrary.Models.SQL
+
+@{
+    ViewData["Title"] = "Detalhes de script de banco " + Model.Name;
+}
+
+<h1>Detalhes do script de banco @Model.Name</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Database)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Database.Name) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String type = "Arquivo";
+                if (Model.Type != 1) { type = "Script SQL"; }
+            }
+            @type &nbsp;
+        </dd>
+        @{ 
+
+        }
+        <dt class="col-sm-3">
+            @type
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                if (Model.Type != 1)
+                {
+                    @Model.SQLScript
+                }
+                else
+                {
+                    if (Model.FilesRemoved == true)
+                    {
+                        @Html.Raw("Os arquivos desta atualização já foram apagados na rotina de expurgo de dados antigos.");
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("DownloadFile", new {sqlId = Model.Id})">
+                            <span class="fa fa-download btn btn-success"> Download dos arquivos SQL</span>
+                        </a>
+                    }
+
+                }
+            }
+
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Enable)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String enable = "Sim";
+                if (!Model.Enable) { enable = "Não"; }
+            }
+            @enable &nbsp;
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.User) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Date) &nbsp;
+        </dd>
+    </dl>
+</div>
+
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>

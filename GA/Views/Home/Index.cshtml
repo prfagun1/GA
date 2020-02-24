@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<h1>Gerenciamento de atualizações</h1>
+<br />
+
+
+<div class="row">
+    <div class="col-sm-4 col-md-4">
+        <div class="card">
+            <div class="card-header text-white bg-success">Atualizações pendentes</div>
+            <div class="card-body">
+                <p>24 Horas: @ViewBag.ScheduledDays1</p>
+                <p>Próximos 7 dias: @ViewBag.ScheduledDays7</p>
+                <p>Próximos 30 dias: @ViewBag.ScheduledDays30</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-md-4">
+        <div class="card">
+            <div class="card-header text-white bg-success">Atualizações feitas</div>
+            <div class="card-body">
+                <p>24 Horas: @ViewBag.DoneDays1</p>
+                <p>Últimos 7 dias: @ViewBag.DoneDays7</p>
+                <p>Últimos 30 dias: @ViewBag.DoneDays30</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-md-4">
+        <div class="card">
+            <div class="card-header text-white bg-success">Últimas atualizações cadastradas</div>
+            <div class="card-body">
+                @foreach (GALibrary.Models.UpdateGA update in ViewBag.UpdateList)
+                {
+                    <p>
+                        <a href="/updatesGA/Details/@update.Id"> @update.Name</a>
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<br />
+<div class="row">
+
+    <div class="col-sm-4 col-md-4">
+        <div class="card">
+            <div class="card-header text-white bg-success">Atualizações realizadas</div>
+            <div class="card-body">
+                <p></p>
+                <p>Quantidade: @ViewBag.UpdateQuantityDone</p>
+                <p></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-md-4">
+        <div class="card">
+            <div class="card-header text-white bg-success">Cadastros</div>
+            <div class="card-body">
+                <p>Servidores: @ViewBag.Server</p>
+                <p>Sistemas: @ViewBag.Application</p>
+                <p>Bancos de dados: @ViewBag.Database</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-md-4">
+        <div class="card">
+            <div class="card-header text-white bg-success">Suas últimas atualizações cadastradas</div>
+            <div class="card-body">
+                @foreach (GALibrary.Models.UpdateGA update in ViewBag.UpdateListUser)
+                {
+                    <p>
+                        <a href="/updatesGA/Details/@update.Id"> @update.Name</a>
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

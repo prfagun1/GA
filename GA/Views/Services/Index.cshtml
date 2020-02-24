@@ -1,0 +1,240 @@
+﻿@model IEnumerable<GALibrary.Models.Service>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+
+@{
+    ViewBag.Title = "Listagem de serviços";
+}
+<h1>Listagem de serviços</h1>
+
+<br />
+<form asp-controller="Services" asp-action="Index" method="get">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="font-weight-bold">
+                Nome
+            </div>
+            <input type="text" name="searchString" value="@ViewBag.searchString" class="form-control searchBoxSize" />
+        </div>
+    </div>
+
+    <p class="small"></p>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="font-weight-bold">
+                    Aplicação
+                </div>
+                @Html.DropDownList("serviceApplicationId", null, "", htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="font-weight-bold">
+                    Servidor
+                </div>
+                @Html.DropDownList("serviceServerId", null, "", htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="font-weight-bold">
+                    Ativo
+                </div>
+                @Html.DropDownList("serviceEnabled", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12" align="right">
+            <button type="submit" value="Pesquisar" class="btn btn-success">
+                <span class="fa fa-search"></span>
+                Pesquisar
+            </button>
+        </div>
+    </div>
+
+</form>
+
+<br />
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-success">
+        <span class="fa fa-plus"></span>
+        Cadastrar novo serviço
+    </a>
+</p>
+
+<div class="text-danger font-weight-bold">
+    @Html.Raw(ViewBag.RegistroApagado)
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="cabecalhos-pesquisa">
+                Nome
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Nome",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        serviceEnabled = ViewBag.serviceEnabled.SelectedValue,
+                        serviceServerId = ViewBag.serviceServerId.SelectedValue,
+                        serviceApplicationId = ViewBag.serviceApplicationId.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Aplicação
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Aplicacao",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        serviceEnabled = ViewBag.serviceEnabled.SelectedValue,
+                        serviceServerId = ViewBag.serviceServerId.SelectedValue,
+                        serviceApplicationId = ViewBag.serviceApplicationId.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Servidor
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Servidor",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        serviceEnabled = ViewBag.serviceEnabled.SelectedValue,
+                        serviceServerId = ViewBag.serviceServerId.SelectedValue,
+                        serviceApplicationId = ViewBag.serviceApplicationId.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Ativo
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Ativo",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        serviceEnabled = ViewBag.serviceEnabled.SelectedValue,
+                        serviceServerId = ViewBag.serviceServerId.SelectedValue,
+                        serviceApplicationId = ViewBag.serviceApplicationId.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.service)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td class="cabecalhos-pesquisa">
+                    @item.Application.Name
+                </td>
+                <td class="cabecalhos-pesquisa">
+                    @item.Server.Name
+                </td>
+                <td class="cabecalhos-pesquisa">
+                    @{
+                        String enable = "Sim";
+                        if (!item.Enable) { enable = "Não"; }
+                    }
+                    @enable
+                </td>
+                <td></td>
+                <td></td>
+                <td class="cabecalhos-pesquisa">
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-description="@item.Name" data-toggle="modal" data-target="#confirm-delete">Apagar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div>
+    @Html.PagedListPager((IPagedList)ViewBag.service, page => Url.Action("Index", new {
+    page = page,
+    searchString = ViewBag.searchString,
+    sortOrderOld = ViewBag.sortOrderOld,
+    serviceEnabled = ViewBag.serviceEnabled.SelectedValue,
+    serviceServerId = ViewBag.serviceServerId.SelectedValue,
+    serviceApplicationId = ViewBag.serviceApplicationId.SelectedValue
+    }),
+
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        UlElementClasses = new[] { "pagination  justify-content-center" }
+    })
+
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel">Confirmação</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que quer apagar o serviço <span class="description"></span> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-danger btn-ok text-white">Apagar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#serviceServerId").select2({
+            placeholder: "Selecione um servidor",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+
+        $("#serviceApplicationId").select2({
+            placeholder: "Selecione uma aplicação",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+
+    });
+
+    $('#confirm-delete').on('click', '.btn-ok', function (e) {
+        var $modalDiv = $(e.delegateTarget);
+        var id = $(this).data('itemId');
+        $modalDiv.addClass('loading');
+        $.post('/Services/Delete/' + id).then(function () {
+            $modalDiv.modal('hide').removeClass('loading');
+            var url = window.location.href.split('?');
+            window.location.href = url[0] + "?registroApagado=true";
+        });
+    });
+
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        var data = $(e.relatedTarget).data();
+        $('.description', this).text(data.itemDescription);
+        $('.btn-ok', this).data('itemId', data.itemId);
+    });
+
+</script>

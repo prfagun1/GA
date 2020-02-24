@@ -1,0 +1,584 @@
+﻿@model GALibrary.Models.UpdateGA
+
+@{
+    ViewData["Title"] = "Edição da atualização " + @Model.Name;
+}
+
+<h1>Edição da atualização @Model.Name</h1>
+<hr />
+<br />
+<div class="row ">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <input id="ApplicationId" runat="server" type="hidden" />
+            <div class="row updateSizeForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group  col-md-12">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group  col-md-12">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control multiLine"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label asp-for="Application.Environment" control-label"></label>
+                    <select asp-for="Application.EnvironmentId" class="form-control" asp-items="ViewBag.updateEnvironmentId" name="updateEnvironmentId" id="updateEnvironmentId" disabled></select>
+                    <select asp-for="Application.EnvironmentId" class="form-control" asp-items="ViewBag.updateEnvironmentId" name="updateEnvironmentId" id="updateEnvironmentId" hidden></select>
+                    <span asp-validation-for="Application.EnvironmentId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label class="control-label">Atualização manual</label>
+                    <select class="form-control" asp-items="ViewBag.updateManual" id="updateManual" name="updateManual" disabled"></select>
+                    <select class="form-control" asp-items="ViewBag.updateManual" id="updateManual" name="updateManual" hidden></select>
+                </div>
+
+                <div class="form-group col-md-12" id="divDemanda">
+                    <label asp-for="Demanda" class="control-label"></label>
+                    <input asp-for="Demanda" class="form-control" />
+                    <span asp-validation-for="Demanda" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label asp-for="ApplicationId" class="control-label"></label>
+                    <select asp-for="ApplicationId" class="form-control" id="updateApplicationId" name="updateApplicationId" asp-items="ViewBag.updateApplicationId" hidden></select>
+                    <input type="text" name="updateApplicationName" value="@ViewBag.updateApplicationName" class="form-control" readonly>
+                    <span asp-validation-for="ApplicationId" class="text-danger"></span>
+                </div>
+
+                <div id="divUpdateManual">
+                    <div class="form-group col-md-12" id="divUpdateType">
+                        <label class="control-label">Selecione um processo</label>
+                        <select class="form-control" asp-items="ViewBag.updateType" id="updateType" onchange="AtualizaTiposAtualizacao()">
+                            <option disabled selected></option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group col-md-12" id="divUpdateFilesDelete">
+                        <label class="control-label">Selecione os arquivos</label>
+                        <div class="form-inline">
+                            <select class="form-control updateSizeFormButtons2" asp-items="ViewBag.updateFilesDelete" id="updateFilesDelete"></select>
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-success updateSizeButtons" onclick="ProcessAdd(1, updateFilesDelete)"><span class="fa fa-arrow-down"></span> Adicionar na lista</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-success updateSizeButtons" data-toggle="modal" data-target="#modal" onclick="ExibeCadastro('updateFilesDelete', 'Cadastro de arquivos para apagar')">
+                                <span class="fa fa-plus"></span> Cadastrar novo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="divUpdateFiles">
+                        <label class="control-label">Selecione os arquivos</label>
+                        <div class="form-inline">
+                            <select class="form-control updateSizeFormButtons2" asp-items="ViewBag.updateFiles" id="updateFiles"></select>
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-success updateSizeButtons" onclick="ProcessAdd(2, updateFiles)"><span class="fa fa-arrow-down"></span> Adicionar na lista</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-success updateSizeButtons" data-toggle="modal" data-target="#modal" onclick="ExibeCadastro('updateFiles', 'Cadastro de arquivos para copiar')">
+                                <span class="fa fa-plus"></span> Cadastrar novo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="divUpdateCommands">
+                        <label class="control-label">Selecione os comandos</label>
+                        <div class="form-inline">
+                            <select class="form-control updateSizeFormButtons1" asp-items="ViewBag.updateCommands" id="updateCommands"></select>
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-success updateSizeButtons" onclick="ProcessAdd(3, updateCommands)"><span class="fa fa-arrow-down"></span> Adicionar na lista</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="divUpdateServicesStart">
+                        <label class="control-label">Selecione os serviços para iniciar</label>
+                        <div class="form-inline">
+                            <select class="form-control updateSizeFormButtons1" asp-items="ViewBag.updateService" id="updateServicesStart"></select>
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-success updateSizeButtons" onclick="ProcessAdd(4, updateServicesStart)"><span class="fa fa-arrow-down"></span> Adicionar na lista</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="divUpdateServicesStop">
+                        <label class="control-label">Selecione os serviços para parar</label>
+                        <div class="form-inline">
+                            <select class="form-control updateSizeFormButtons1" asp-items="ViewBag.updateService" id="updateServicesStop"></select>
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-success updateSizeButtons" onclick="ProcessAdd(5, updateServicesStop)"><span class="fa fa-arrow-down"></span> Adicionar na lista</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group  col-md-12" id="divUpdateSQLs">
+                        <label class="control-label">Selecione os arquivos</label>
+                        <div class="form-inline">
+                            <select class="form-control updateSizeFormButtons2" asp-items="ViewBag.updateSQLs" id="updateSQLs"></select>
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-success updateSizeButtons" onclick="ProcessAdd(6, updateSQLs)"><span class="fa fa-arrow-down"></span> Adicionar na lista</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-success updateSizeButtons" data-toggle="modal" data-target="#modal" onclick="ExibeCadastro('updateSQLs', 'Cadastro de scripts de banco')">
+                                <span class="fa fa-plus"></span> Cadastrar novo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class=" col-md-12 form-group">
+                        <p>Processos selecionados</p>
+                        <table>
+                            <tr>
+                                <td rowspan="7">
+                                    <select asp-for="UpdateSteps" class="form-control updateSizeProcessosSelecionados listBoxSelection" id="updateProcessSelected" name="updateProcessSelected" asp-items="ViewBag.updateProcessSelected"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="7">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn btn-success" onclick="ProcessOrder(1)">
+                                        <span class="fa fa-arrow-up"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn btn-success" onclick="ProcessOrder(2)">
+                                        <span class="fa fa-arrow-down"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn btn-success" onclick="ProcessRemove()">
+                                        <span class="fa fa-remove"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>
+                        <span asp-validation-for="UpdateSteps" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="form-group  col-md-12">
+                    <label class="control-label">Enviar comunicado para</label>
+                    <select class="form-control" asp-items="ViewBag.updateEmails" id="updateEmails" name="updateEmails"></select>
+                </div>
+
+
+                <div class="form-group  col-md-12 ">
+                    <label asp-for="Schedule" class="control-label"></label>
+                    <input name="Schedule" class="form-control formDateTime" id="Schedule" value="@ViewBag.updateSchedule">
+                    <span asp-validation-for="Schedule" class="text-danger"></span>
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                    <label class="form-check-label">
+                        <input class="" asp-for="AlertUser" /> @Html.DisplayNameFor(model => model.AlertUser)
+                    </label>
+                    <span asp-validation-for="AlertUser" class="text-danger"></span>
+                </div>
+
+
+
+                <div class="form-group   col-md-12">
+                    <input type="submit" value="Agendar a atualização" id="button" name="button" class="btn btn-success" onclick="SelectProcess()" />
+                    &nbsp;&nbsp;
+                    <input type="submit" value="Salvar como rascunho" id="button" name="button" class="btn btn-success" onclick="SelectProcess()" />
+                    &nbsp;&nbsp;
+                    <input type="submit" value="Salvar como template" id="button" name="button" class="btn btn-success" onclick="SelectProcess()" />
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modelUpdateForm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle"></h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />&nbsp;
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#Demanda").inputmask("integer");
+        ConfiguraAtualizacaoManual();
+
+        //$("#divUpdateType").hide();
+        $("#divUpdateFilesDelete").hide();
+        $("#divUpdateFiles").hide();
+        $("#divUpdateCommands").hide();
+        $("#divUpdateServicesStart").hide();
+        $("#divUpdateServicesStop").hide();
+        $("#divUpdateSQLs").hide();
+
+        $("#Schedule").inputmask("datetime", { jitMasking: true });
+
+        $("#updateType").select2({
+            placeholder: "Selecione um processo",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+
+        $("#updateFilesDelete").select2({
+            placeholder: "Selecione um grupo de arquivos",
+            minimumInputLength: 0,
+            allowClear: true,
+            width: 625,
+            theme: "bootstrap4"
+        });
+
+        $("#updateFiles").select2({
+            placeholder: "Selecione um grupo de arquivos",
+            minimumInputLength: 0,
+            allowClear: true,
+            width: 625,
+            theme: "bootstrap4"
+        });
+
+        $("#updateCommands").select2({
+            placeholder: "Selecione os comandos",
+            minimumInputLength: 0,
+            allowClear: true,
+            width: 809,
+            theme: "bootstrap4"
+        });
+
+        $("#updateServicesStart").select2({
+            placeholder: "Selecione os serviços",
+            minimumInputLength: 0,
+            allowClear: true,
+            width: 809,
+            theme: "bootstrap4"
+        });
+
+        $("#updateServicesStop").select2({
+            placeholder: "Selecione os serviços",
+            minimumInputLength: 0,
+            allowClear: true,
+            width: 809,
+            theme: "bootstrap4"
+        });
+
+        $("#updateSQLs").select2({
+            placeholder: "Selecione os scripts de banco",
+            minimumInputLength: 0,
+            allowClear: true,
+            width: 625,
+            theme: "bootstrap4"
+        });
+    });
+
+    function SelectProcess() {
+        $("#updateProcessSelected option").prop("selected", true);
+    }
+
+    function ExibeCadastro(view, titulo) {
+        var aplicacationId = $('#updateApplicationId option:selected').val();
+        $("#modalTitle").text(titulo);
+        $("#modalBody").html("<div class='loader text-center'></div>");
+
+        switch (view) {
+            case "updateFilesDelete":
+                $("#modalBody").load('@(Url.Action("CreatePartialView", "FilesDelete", new { updateApplicationId = "IDreplace" }))'.replace("IDreplace", aplicacationId));
+                break;
+            case "updateFiles":
+                $("#modalBody").load('@(Url.Action("CreatePartialView", "Files", new { updateApplicationId = "IDreplace" }))'.replace("IDreplace", aplicacationId));
+                break;
+            case "updateCommands":
+                $("#modalBody").load('@(Url.Action("CreatePartialView", "Commands", new { updateApplicationId = "IDreplace" }))'.replace("IDreplace", aplicacationId));
+                break;
+            case "updateServicesStart":
+                $("#modalBody").load('@(Url.Action("CreatePartialView", "Services", new { updateApplicationId = "IDreplace" }))'.replace("IDreplace", aplicacationId));
+                break;
+            case "updateServicesStop":
+                $("#modalBody").load('@(Url.Action("CreatePartialView", "Services", new { updateApplicationId = "IDreplace" }))'.replace("IDreplace", aplicacationId));
+                break;
+            case "updateSQLs":
+                $("#modalBody").load('@(Url.Action("CreatePartialView", "SQLs", new { updateApplicationId = "IDreplace" }))'.replace("IDreplace", aplicacationId));
+                break;
+        }
+    }
+
+    $('#modal').on('hidden.bs.modal', function () {
+        var tipo = document.getElementById("updateType");
+        LoadDropDownList(tipo.selectedIndex.toString());
+    })
+
+    function ProcessRemove() {
+        $('#updateProcessSelected option:selected').remove();
+    }
+
+    function ProcessOrder(order) {
+        var processo = document.getElementById("updateProcessSelected");
+        //1 = up
+        //2 = down
+        if (order == 1) OrderUp(processo, processo.selectedIndex, processo.options[processo.selectedIndex]);
+        if (order == 2) OrderDown(processo, processo.selectedIndex, processo.options[processo.selectedIndex]);
+    }
+
+    function OrderDown(select, idx, option) {
+        if (idx == select.options.length - 1) return;
+
+        var saved = [];
+        var option = new Option(option.text, option.value)
+
+        var i;
+        for (i = 0; i < select.options.length; i++) {
+            saved.push(select.options[i]);
+        }
+
+
+        select.options.length = 0;
+        for (i = 0; i < idx; i++) {
+            select.options[select.options.length] = saved[i];
+        }
+
+
+        select.options[select.options.length] = saved[i + 1];
+        select.options[select.options.length] = option;
+
+        i = i + 2;
+
+        while (i < saved.length) {
+            select.options[select.options.length] = saved[i++];
+        }
+
+        select.selectedIndex = idx + 1;
+    }
+
+
+    function OrderUp(select, idx, option) {
+        if (idx == 0) return;
+
+        var saved = [];
+        var option = new Option(option.text, option.value)
+
+        var i;
+        for (i = 0; i < select.options.length; i++) {
+            saved.push(select.options[i]);
+        }
+
+
+        select.options.length = 0;
+        for (i = 0; i < idx - 1; i++) {
+            select.options[select.options.length] = saved[i];
+        }
+
+        select.options[select.options.length] = option;
+        select.options[select.options.length] = saved[i];
+
+        i = i + 2;
+
+        while (i < saved.length) {
+            select.options[select.options.length] = saved[i++];
+        }
+
+        select.selectedIndex = idx - 1;
+    }
+
+    function ProcessAdd(id, process) {
+        var types = document.getElementById("updateType");
+        var typesName = types.options[id].text;
+        var typesId = types.options[id].value;
+
+        var processName = process.options[process.selectedIndex].text;
+        var processId = process.value;
+
+        if (process.selectedIndex != 0) {
+            var option = document.createElement("option");
+            option.text = typesName + " - " + processName;
+            option.value = typesId + " - " + processId;
+            document.getElementById("updateProcessSelected").options.add(option);
+        }
+
+    }
+
+    function LoadDropDownList(id) {
+
+        var applicationId = $('#updateApplicationId option:selected').val();
+        var type = "";
+
+
+        switch (id) {
+            case "1": type = "updateFilesDelete"; break;
+            case "2": type = "updateFiles"; break;
+            case "3": type = "updateCommands"; break;
+            case "4": type = "updateServicesStart"; break;
+            case "5": type = "updateServicesStop"; break;
+            case "6": type = "updateSQLs"; break;
+        }
+
+        $.getJSON("/UpdatesGA/LoadDropDownList/?id=" + id + "&applicationID=" + applicationId, function (data) {
+            var items = "<option value><-- Selecione item --></option> ";
+            $('#' + type).attr("disabled", false);
+            $.each(data, function (i, data) {
+
+                items += "<option value='" + data.Value + "'>" + data.Text + "</option>";
+            });
+            $("#" + type).html(items);
+            document.getElementById(type).selectedIndex = "0";
+        });
+    }
+
+
+    function ConfiguraAmbiente() {
+        var ambiente = $('#updateEnvironmentId option:selected').val();
+        if (ambiente == '1') {
+            $("#divDemanda").show();
+        } else {
+            $("#divDemanda").hide();
+        }
+
+        LoadApplications();
+    }
+
+    function ExibeDadosAtualizacao() {
+        var aplicacationId = $('#updateApplicationId option:selected').val();
+
+        if (aplicacationId == 0) {
+            $("#divUpdateType").hide();
+        }
+        else {
+            $("#divUpdateType").show();
+        }
+    }
+
+    function LoadApplications() {
+        var ambiente = document.getElementById("updateEnvironmentId");
+        var ambienteId = ambiente.options[ambiente.selectedIndex].value;
+        var type = 'updateApplicationId';
+
+        $.getJSON("/UpdatesGA/LoadDropDownListApplications/?ambiente=" + ambienteId, function (data) {
+            var items = "<option value><-- Selecione item --></option> ";
+            $('#' + type).attr("disabled", false);
+            $.each(data, function (i, data) {
+                items += "<option value='" + data.Value + "'>" + data.Text + "</option>";
+            });
+            $("#" + type).html(items);
+            document.getElementById(type).selectedIndex = "0";
+        });
+    }
+
+    function AtualizaTiposAtualizacao() {
+        var tiposAtualizacao = $('#updateType option:selected').val();
+
+        switch (tiposAtualizacao) {
+            case "0":
+                $("#divUpdateFilesDelete").hide();
+                $("#divUpdateFiles").hide();
+                $("#divUpdateCommands").hide();
+                $("#divUpdateServicesStart").hide();
+                $("#divUpdateServicesStop").hide();
+                $("#divUpdateSQLs").hide();
+                break;
+            case "1":
+                $("#divUpdateFilesDelete").show();
+                $("#divUpdateFiles").hide();
+                $("#divUpdateCommands").hide();
+                $("#divUpdateServicesStart").hide();
+                $("#divUpdateServicesStop").hide();
+                $("#divUpdateSQLs").hide();
+                LoadDropDownList(tiposAtualizacao);
+                break;
+            case "2":
+                $("#divUpdateFilesDelete").hide();
+                $("#divUpdateFiles").show();
+                $("#divUpdateCommands").hide();
+                $("#divUpdateServicesStart").hide();
+                $("#divUpdateServicesStop").hide();
+                $("#divUpdateSQLs").hide();
+                LoadDropDownList(tiposAtualizacao);
+                break;
+            case "3":
+                $("#divUpdateFilesDelete").hide();
+                $("#divUpdateFiles").hide();
+                $("#divUpdateCommands").show();
+                $("#divUpdateServicesStart").hide();
+                $("#divUpdateServicesStop").hide();
+                $("#divUpdateSQLs").hide();
+                LoadDropDownList(tiposAtualizacao);
+                break;
+            case "4":
+                $("#divUpdateFilesDelete").hide();
+                $("#divUpdateFiles").hide();
+                $("#divUpdateCommands").hide();
+                $("#divUpdateServicesStart").show();
+                $("#divUpdateServicesStop").hide();
+                $("#divUpdateSQLs").hide();
+                LoadDropDownList(tiposAtualizacao);
+                break;
+            case "5":
+                $("#divUpdateFilesDelete").hide();
+                $("#divUpdateFiles").hide();
+                $("#divUpdateCommands").hide();
+                $("#divUpdateServicesStart").hide();
+                $("#divUpdateServicesStop").show();
+                $("#divUpdateSQLs").hide();
+                LoadDropDownList(tiposAtualizacao);
+                break;
+            case "6":
+                $("#divUpdateFilesDelete").hide();
+                $("#divUpdateFiles").hide();
+                $("#divUpdateCommands").hide();
+                $("#divUpdateServicesStart").hide();
+                $("#divUpdateServicesStop").hide();
+                $("#divUpdateSQLs").show();
+                LoadDropDownList(tiposAtualizacao);
+                break;
+        }
+
+    }
+
+    function ConfiguraAtualizacaoManual() {
+
+        var updateManual = document.getElementById("updateManual");
+        var updateManualId = updateManual.options[updateManual.selectedIndex].value;
+
+        if (updateManualId === "True") {
+            $("#divUpdateManual").hide();
+        }
+        else {
+            $("#divUpdateManual").show();
+        }
+    }
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,85 @@
+﻿@model GALibrary.Models.ProcedureSchedule
+
+@{
+    ViewData["Title"] = "Detalhes do agendamento do procedimento";
+}
+
+<h1>Detalhes do agendamento do procedimento</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Procedure)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Procedure.Name) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Schedule)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Schedule) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                var status = "";
+                switch (Model.Status)
+                {
+                    case -1:
+                        status = "Todos";
+                        break;
+                    case 0:
+                        status = "Pendente";
+                        break;
+                    case 1:
+                        status = "Realizada com sucesso";
+                        break;
+                    case 2:
+                        status = "Realizada com erros";
+                        break;
+
+                }
+            }
+            @status &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            Log
+        </dt>
+        <dd class="col-sm-9">
+            @if (Model.Status == 1)
+            {
+                @Html.ActionLink("Download", "DownloadLog", "ProcedureSchedules", new { procedureScheduleID = Model.Id }, new { @class = "btn btn-success btn-large" })
+            }
+            @if (Model.Status == 2)
+            {
+                @Html.ActionLink("Download", "DownloadLog", "ProcedureSchedules", new { procedureScheduleID = Model.Id }, new { @class = "btn btn-danger btn-large" })
+            }
+            @if (Model.Status == 3)
+            {
+                @Html.ActionLink("Download", "DownloadLog", "ProcedureSchedules", new { procedureScheduleID = Model.Id }, new { @class = "btn btn-success btn-large" })
+            }
+            &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.User) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Date) &nbsp;
+        </dd>
+    </dl>
+</div>
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>

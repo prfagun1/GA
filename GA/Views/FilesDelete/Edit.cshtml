@@ -1,0 +1,162 @@
+﻿@model GALibrary.Models.FileDelete
+
+
+@{
+    ViewData["Title"] = "Edição do arquivo para apagar " + @Model.Name;
+}
+
+<h1>Edição do arquivo para apagar @Model.Name</h1>
+
+
+<form asp-action="Edit">
+    <div class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-12 form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control listBoxSelectionForm" id="FilesDeleteName" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="col-md-12 listBoxSelectionForm form-group">
+            <label asp-for="ApplicationId" class="control-label"></label>
+            <select asp-for="ApplicationId" class="form-control listBoxSelectionForm" asp-items="ViewBag.ApplicationIdFileDelete" id="ApplicationIdFileDelete" onchange="GetFolderFiles()">
+                <option disabled selected></option>
+            </select>
+            <span asp-validation-for="ApplicationId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label asp-for="Enable" class="control-label"></label>
+            <select asp-for="Enable" class="form-control col-md-2" asp-items="ViewBag.EnabledFileDelete"></select>
+            <span asp-validation-for="Enable" class="text-danger"></span>
+        </div>
+
+
+        <div class="col-md-12  listBoxSelectionform">
+            <table class="listBoxSelectionTable">
+                <tr>
+                    <td>
+                        <p>Diretórios disponíveis</p>
+                        <select asp-for="Application.Folder" class="form-control form-control-range listBoxSelection" id="FileDeleteFolderLeft" name="FileDeleteFolderLeft" asp-items="ViewBag.FileDeleteFolderLeft"></select>
+
+                    </td>
+                    <td align="center" class="listBoxSelectionArrows">
+                        <p><br /></p>
+                        <a onclick="AddFolder()" class="btn"> <span class="fa fa-2x fa-chevron-right" aria-hidden="true"></span> </a>
+                        <a onclick="RemoveFolder()" class="btn"> <span class="fa fa-2x fa-chevron-left" aria-hidden="true"></span> </a>
+                    </td>
+                    <td>
+                        <p>Diretórios selecionados</p>
+                        <select asp-for="Application.Folder" class="form-control listBoxSelection" id="FileDeleteFolderRight" name="FileDeleteFolderRight" asp-items="ViewBag.FileDeleteFolderRight"></select>
+
+                    </td>
+                </tr>
+
+            </table>
+            <div class="text-danger" id="FoldersError">@ViewBag.ErroPastas</div>
+        </div>
+
+        <div class="form-group">
+            &nbsp;
+        </div>
+
+        <div class="form-group col-md-12">
+            <label asp-for="FilesDirectory" class="control-label"></label>
+            <textarea asp-for="FilesDirectory" class="form-control listBoxSelectionFormMultiline"></textarea>
+            <span asp-validation-for="FilesDirectory" class="text-danger"></span>
+            <p>
+                *Deve ser informado um arquivo ou pasta por linha;<br />
+                *O caminho do arquivo deve ser complementar o diretório já informado;
+            </p>
+        </div>
+
+
+        <div class="form-group col-md-12">
+            <input type="submit" value="Salvar" class="btn btn-success" onclick="SelectFolder()" />
+        </div>
+
+        <div class="form-group col-md-12 font-weight-bold">
+            <div class="text-success" id="divStatusOK"></div>
+            <div class="text-danger" id="divStatusErro"></div>
+        </div>
+    </div>
+</form>
+
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        $("#ApplicationIdFileDelete").select2({
+            placeholder: "Selecione uma aplicação",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+    });
+
+    function SelectFolder() {
+        var lista = document.getElementById("FileDeleteFolderRight");
+        for (i = 0; i < lista.length; i++) {
+            lista.options[i].selected = true;
+        }
+    }
+
+    function AddFolder() {
+        var selectedOpts = $('#FileDeleteFolderLeft option:selected');
+        $('#FileDeleteFolderRight').append($(selectedOpts).clone());
+        $(selectedOpts).remove();
+
+        selectSort('#FileDeleteFolderRight', 'text', 'asc');
+
+        $("#FileDeleteFolderRight option:selected").prop("selected", false)
+        $("#FileDeleteFolderLeft option:selected").prop("selected", false)
+    }
+
+    function RemoveFolder() {
+        var selectedOpts = $('#FileDeleteFolderRight option:selected');
+        $('#FileDeleteFolderLeft').append($(selectedOpts).clone());
+        $(selectedOpts).remove();
+
+        selectSort('#FileDeleteFolderLeft', 'text', 'asc');
+
+        $("#FileDeleteFolderRight option:selected").prop("selected", false)
+        $("#FileDeleteFolderLeft option:selected").prop("selected", false)
+    }
+
+    function GetFolderFiles() {
+        $("#FileDeleteFolderLeft").empty()
+        $("#FileDeleteFolderRight").empty()
+
+        var testaAplicacao1 = $("#ApplicationIdFileDelete option:selected").val();
+        var testaAplicacao2 = $("#ApplicationId option:selected").val();
+
+        if (testaAplicacao1 === '') {
+            applicationID = testaAplicacao2;
+        }
+        else {
+            applicationID = testaAplicacao1;
+        }
+
+        $("#FileDeleteFolderLeft").empty()
+        $.getJSON("/FilesDelete/LoadDropDownList/?applicationID=" + applicationID, function (data) {
+            var items;
+            $.each(data, function (i, data) {
+                items += "<option value='" + data.Id + "'>" + data.Path + "</option>";
+            });
+            $("#FileDeleteFolderLeft").html(items);
+            $("#FileDeleteFolderLeft option:selected").prop("selected", false)
+        });
+
+    }
+
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

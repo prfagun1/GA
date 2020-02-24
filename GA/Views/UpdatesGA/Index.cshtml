@@ -1,0 +1,416 @@
+﻿@model IEnumerable<GALibrary.Models.UpdateGA>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+
+
+@{
+    ViewBag.Title = "Listagem de atualizações";
+}
+
+<h1>Listagem de atualizações</h1>
+
+<br />
+<form asp-controller="UpdatesGA" asp-action="Index" method="get">
+    <div asp-validation-summary="None" class="text-danger"></div>
+    <div class="row">
+        <div class="form-group col-md-12">
+            <div>
+                Nome
+            </div>
+            <input type="text" name="searchString" value="@ViewBag.searchString" class="form-control searchBoxSize">
+        </div>
+
+
+        <div class="col-md-8">
+            <div class="form-group">
+                <div>
+                    Aplicações
+                </div>
+                @Html.DropDownList("updateApplicationId", null, "", htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    Data inicial
+                </div>
+                <input name="dataInicial" class="form-control searchBoxSize" id="dataInicial" value="@ViewBag.dataInicial">
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    Data final
+                </div>
+                <input name="dataFinal" class="form-control searchBoxSize" id="dataFinal" value="@ViewBag.dataFinal">
+            </div>
+        </div>
+
+
+        <div class="form-group col-md-4">
+            <div>
+                Usuario
+            </div>
+            <input type="text" name="updateCriadoPor" value="@ViewBag.updateCriadoPor" class="form-control searchBoxSize">
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    Template
+                </div>
+                @Html.DropDownList("updateTemplate", null, htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+
+        <div class="form-group col-md-2">
+            <div>
+                Status
+            </div>
+            @Html.DropDownList("updateStatus", null, htmlAttributes: new { @class = "form-control " })
+        </div>
+
+        <div class="form-group col-md-2">
+            <div>
+                Tipo
+            </div>
+            @Html.DropDownList("updateTipo", null, htmlAttributes: new { @class = "form-control " })
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    Demanda
+                </div>
+                <input type="text" name="updateDemanda" value="@ViewBag.updateDemanda" class="form-control searchBoxSize">
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12" align="right">
+            <button type="submit" value="Pesquisar" class="btn btn-success">
+                <span class="fa fa-search"></span>
+                Pesquisar
+            </button>
+        </div>
+    </div>
+
+</form>
+
+<br />
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-success">
+        <span class="fa fa-plus"></span>
+        Cadastrar nova atualização
+    </a>
+</p>
+
+<div class="text-danger font-weight-bold">
+    @Html.Raw(ViewBag.RegistroApagado)
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="cabecalhos-pesquisa">
+                Demanda
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Demanda",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        updateDemanda = ViewBag.updateDemanda,
+                        updateStatus = ViewBag.updateStatus.SelectedValue,
+                        updateApplicationId = ViewBag.updateApplicationId.SelectedValue,
+                        updateCriadoPor = ViewBag.updateCriadoPor,
+                        updateTipo = ViewBag.updateTipo,
+                        updateTemplate = ViewBag.updateTemplate,
+                        dataFinal = ViewBag.dataFinal,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Nome da atualização
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Nome",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        updateDemanda = ViewBag.updateDemanda,
+                        updateStatus = ViewBag.updateStatus.SelectedValue,
+                        updateApplicationId = ViewBag.updateApplicationId.SelectedValue,
+                        updateCriadoPor = ViewBag.updateCriadoPor,
+                        updateTipo = ViewBag.updateTipo,
+                        updateTemplate = ViewBag.updateTemplate,
+                        dataFinal = ViewBag.dataFinal,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Agendamento
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Agendamento",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        updateDemanda = ViewBag.updateDemanda,
+                        updateStatus = ViewBag.updateStatus.SelectedValue,
+                        updateApplicationId = ViewBag.updateApplicationId.SelectedValue,
+                        updateCriadoPor = ViewBag.updateCriadoPor,
+                        updateTipo = ViewBag.updateTipo,
+                        updateTemplate = ViewBag.updateTemplate,
+                        dataFinal = ViewBag.dataFinal,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Usuário
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Usuario",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        updateDemanda = ViewBag.updateDemanda,
+                        updateStatus = ViewBag.updateStatus.SelectedValue,
+                        updateApplicationId = ViewBag.updateApplicationId.SelectedValue,
+                        updateCriadoPor = ViewBag.updateCriadoPor,
+                        updateTipo = ViewBag.updateTipo,
+                        updateTemplate = ViewBag.updateTemplate,
+                        dataFinal = ViewBag.dataFinal,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Aplicação
+                <a href="@Url.Action("Index", new {
+                    sortOrder = "Aplicacao",
+                    searchString = ViewBag.searchString,
+                    sortOrderOld = ViewBag.sortOrderOld,
+                    updateDemanda = ViewBag.updateDemanda,
+                    updateStatus = ViewBag.updateStatus.SelectedValue,
+                    updateApplicationId = ViewBag.updateApplicationId.SelectedValue,
+                    updateCriadoPor = ViewBag.updateCriadoPor,
+                    updateTipo = ViewBag.updateTipo,
+                    updateTemplate = ViewBag.updateTemplate,
+                    dataFinal = ViewBag.dataFinal,
+                    dataInicial = ViewBag.dataInicial
+                })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Tipo
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Tipo",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        updateDemanda = ViewBag.updateDemanda,
+                        updateStatus = ViewBag.updateStatus.SelectedValue,
+                        updateApplicationId = ViewBag.updateApplicationId.SelectedValue,
+                        updateCriadoPor = ViewBag.updateCriadoPor,
+                        updateTipo = ViewBag.updateTipo,
+                        updateTemplate = ViewBag.updateTemplate,
+                        dataFinal = ViewBag.dataFinal,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Status
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Status",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        updateDemanda = ViewBag.updateDemanda,
+                        updateStatus = ViewBag.updateStatus.SelectedValue,
+                        updateApplicationId = ViewBag.updateApplicationId.SelectedValue,
+                        updateCriadoPor = ViewBag.updateCriadoPor,
+                        updateTipo = ViewBag.updateTipo,
+                        updateTemplate = ViewBag.updateTemplate,
+                        dataFinal = ViewBag.dataFinal,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Log
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.update)
+        {
+        <tr>
+            <td>
+                <a href="http://sun119.unimed-ners.net:8080/TraceGP/Demanda.do?tipoTelaDemanda=todasDemandas&command=popupDemandaAction&idDemanda=@item.Demanda">@item.Demanda</a>
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td class="cabecalhos-pesquisa">
+                @item.Schedule
+            </td>
+            <td>
+                @item.User
+            </td>
+            <td class="cabecalhos-pesquisa">
+                @item.Application.Name
+            </td>
+            <td>
+                @{
+                    String manual = "Manual";
+                    if (!item.Manual) { manual = "Automática"; }
+                }
+                @manual
+            </td>
+            <td class="cabecalhos-pesquisa">
+                @{
+                    String status = "";
+                    switch (item.Status)
+                    {
+                        case 0:
+                            status = "Pendente";
+                            break;
+                        case 1:
+                            status = "Realizada com sucesso";
+                            break;
+                        case 2:
+                            status = "Realizada com erros";
+                            break;
+                        case 3:
+                            status = "Atualizando";
+                            break;
+                        case 4:
+                            status = "Rascunho";
+                            break;
+                    }
+                    if (item.Template == true)
+                    {
+                        status = "Template";
+                    }
+                }
+                @status
+            </td>
+            <td>
+                @if (item.Status == 1 || item.Status == 3)
+                {
+                    <a href="@Url.Action("DownloadLog", new {updateId = item.Id})">
+                        <span class="fa fa-download btn btn-success"> Download</span>
+                    </a>
+                }
+                @if (item.Status == 2)
+                {
+                    <a href="@Url.Action("DownloadLog", new {updateId = item.Id})">
+                        <span class="fa fa-download btn btn-danger"> Download</span>
+                    </a>
+                }
+
+            </td>
+            <td class="cabecalhos-pesquisa">
+                @if (item.Status != 0 && item.Status < 3)
+                {
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
+                }
+
+                @if (item.Status == 0 || item.Status > 3)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                    @Html.Raw("|")
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
+                    @Html.Raw("|")
+                    <a asp-action="Details" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-description="@item.Name" data-toggle="modal" data-target="#confirm-delete">Apagar</a>
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+<div>
+    @Html.PagedListPager((IPagedList)ViewBag.update, page => Url.Action("Index", new {
+    page = page,
+    searchString = ViewBag.searchString,
+    sortOrderOld = ViewBag.sortOrderOld,
+    updateDemanda = ViewBag.updateDemanda,
+    updateStatus = ViewBag.updateStatus.SelectedValue,
+    updateApplicationId = ViewBag.updateApplicationId.SelectedValue,
+    updateCriadoPor = ViewBag.updateCriadoPor,
+    updateTipo = ViewBag.updateTipo,
+    updateTemplate = ViewBag.updateTemplate,
+    dataFinal = ViewBag.dataFinal,
+    dataInicial = ViewBag.dataInicial,
+}),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        UlElementClasses = new[] { "pagination  justify-content-center" }
+    })
+
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel">Confirmação</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que quer apagar a atualização <span class="description"></span> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-danger btn-ok text-white">Apagar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#dataInicial").inputmask("date", { jitMasking: true });
+        $("#dataFinal").inputmask("date", { jitMasking: true });
+
+        $("#updateApplicationId").select2({
+            placeholder: "Selecione uma aplicação",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+
+    });
+
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        var data = $(e.relatedTarget).data();
+        $('.description', this).text(data.itemDescription);
+        $('.btn-ok', this).data('itemId', data.itemId);
+    });
+
+    $('#confirm-delete').on('click', '.btn-ok', function (e) {
+        var $modalDiv = $(e.delegateTarget);
+        var id = $(this).data('itemId');
+        $modalDiv.addClass('loading');
+        $.post('/UpdatesGA/Delete/' + id).then(function () {
+            $modalDiv.modal('hide').removeClass('loading');
+            var url = window.location.href.split('?');
+            window.location.href = url[0] + "?registroApagado=true";
+        });
+    });
+</script>

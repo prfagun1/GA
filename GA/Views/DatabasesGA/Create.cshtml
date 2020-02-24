@@ -1,0 +1,108 @@
+﻿@model GALibrary.Models.DatabaseGA
+
+@{
+    ViewData["Title"] = "Cadastro de banco de dados";
+}
+
+<h1>Cadastro de banco de dados</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control multiLine"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="ApplicationId" class="control-label"></label>
+                    <select asp-for="ApplicationId" asp-items="ViewBag.DatabaseGAApplicationId" class="form-control">
+                        <option disabled selected></option>
+                    </select>
+                    <span asp-validation-for="ApplicationId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="form-group">
+                        <label asp-for="DatabaseConnectionId" class="control-label"></label>
+                        <select asp-for="DatabaseConnectionId" class="form-control" asp-items="ViewBag.DatabaseGADatabaseConnectionId">
+                            <option disabled selected></option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="DatabaseUser" class="control-label"></label>
+                    <input asp-for="DatabaseUser" class="form-control" />
+                    <span asp-validation-for="DatabaseUser" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="DatabasePassword" class="control-label"></label>
+                    <input asp-for="DatabasePassword" class="form-control" />
+                    <span asp-validation-for="DatabasePassword" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Server" class="control-label"></label>
+                    <input asp-for="Server" class="form-control" />
+                    <span asp-validation-for="Server" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="DatabaseName" class="control-label"></label>
+                    <input asp-for="DatabaseName" class="form-control" />
+                    <span asp-validation-for="DatabaseName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Port" class="control-label"></label>
+                    <input name="Port" class="form-control text-left" id="Port">
+                    <span asp-validation-for="Port" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type="text/javascript">
+
+    $("#Port").inputmask("integer");
+
+    $(document).ready(function () {
+        $("#ApplicationId").select2({
+            placeholder: "Selecione uma aplicação",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+
+        $("#DatabaseConnectionId").select2({
+            placeholder: "Selecione uma conexão",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+    });
+
+</script>

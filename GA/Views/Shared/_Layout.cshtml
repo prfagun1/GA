@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GA</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
+    </environment>
+    <link href="~/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/select2/css/select2.css" rel="stylesheet" />
+    <link href="~/select2/css/select2-bootstrap4.css" rel="stylesheet" />
+    <link href="~/jquery.inputmask/css/inputmask.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <nav class="navbar navbar-expand-sm navbar-custom">
+            <a href="/" class="navbar-brand">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCustom">
+                <i class="fa fa-bars fa-lg py-1 text-white"></i>
+            </button>
+            <div class="navbar-collapse collapse" id="navbarCustom">
+                <ul class="navbar-nav">
+
+                    @{
+                        if (User.HasClaim(c => c.Type == "Administração"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Cadastros
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Environments" asp-action="Index">Ambiente</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Applications" asp-action="Index">Aplicações</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="DatabasesGA" asp-action="Index">Bancos de dados</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="DatabaseConnections" asp-action="Index">Conexões com bancos de dados</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Commands" asp-action="Index">Comandos</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AlertMails" asp-action="Index">E-mails</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Procedures" asp-action="Index">Procedimentos</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Servers" asp-action="Index">Servidores</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Services" asp-action="Index">Serviços</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="OS" asp-action="Index">Sistemas operacionais</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="ServerUsers" asp-action="Index">Usuários servidores</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Parameters" asp-action="Details" asp-route-id="1">Parâmetros de ambiente</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="PermissionGroups" asp-action="Index">Permissões</a>
+                                </div>
+                            </li>
+                        }
+                    }
+
+                    @{
+                        if (User.HasClaim(c => c.Type == "Atualização"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Gestão de atualizações
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="UpdatesGA" asp-action="Create">Nova atualização</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="UpdatesGA" asp-action="Index">Pesquisa de atualizações</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="FileHistories" asp-action="Index">Pesquisa de arquivos atualizados</a>
+                                </div>
+                            </li>
+                        }
+                    }
+
+                    @{
+                        if (User.HasClaim(c => c.Type == "Atualização"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Procedimentos
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="ProcedureSchedules" asp-action="Create">Novo procedimento</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="ProcedureSchedules" asp-action="Index">Pesquisa de procedimento</a>
+                                </div>
+                            </li>
+                        }
+                    }
+
+                    @{
+                        if (User.HasClaim(c => c.Type == "Atualização"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Anexos
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="FilesDelete" asp-action="Index">Arquivos para apagar</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Files" asp-action="Index">Arquivos para copiar</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="SQLs" asp-action="Index">Scripts de banco de dados</a>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+                @{
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        <span class="ml-auto navbar-text navbar-right">
+                            Usuário: @User.Identity.Name | @Html.ActionLink("Sair", "LogOff", "Account", null, new { Class = "action add text-white", title = "Fazer logof." })
+                        </span>
+                    }
+                }
+            </div>
+        </nav>
+    </header>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
+        </script>
+    </environment>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/select2/js/select2.js" asp-append-version="true"></script>
+    <script src="~/select2/js/select2.js" asp-append-version="true"></script>
+    <script src="~/jquery.inputmask/inputmask/inputmask.js"></script>
+    <script src="~/jquery.inputmask/inputmask/inputmask.extensions.js"></script>
+    <script src="~/jquery.inputmask/inputmask/inputmask.numeric.extensions.js"></script>
+    <script src="~/jquery.inputmask/inputmask/inputmask.date.extensions.js"></script>
+    <script src="~/jquery.inputmask/inputmask/jquery.inputmask.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+    <div class="container-fluid body-margin">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3">
+            <br />
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div>
+            ©Gerenciamento de atualizações - Versão 1.0 - 2019
+        </div>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

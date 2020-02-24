@@ -1,0 +1,58 @@
+﻿@model GALibrary.Models.Procedure
+
+@{
+    ViewData["Title"] = "Detalhes do procedimento " + Model.Name;
+}
+
+<h1>Detalhes do procedimento @Model.Name</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.ProcedureSteps)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.Raw(@ViewBag.StepResult) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Enable)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String enable = "Sim";
+                if (!Model.Enable) { enable = "Não"; }
+            }
+            @enable &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.User)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+    </dl>
+</div>
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>

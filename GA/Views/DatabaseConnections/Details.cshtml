@@ -1,0 +1,53 @@
+﻿@model GALibrary.Models.DatabaseConnection
+
+@{
+    ViewData["Title"] = "Detalhes da conexão " + Model.Name;
+}
+
+<h1>Detalhes da conexão @Model.Name</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.SQLImportCommand)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.SQLImportCommand) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Enable)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String ativo = "Sim";
+                if (!Model.Enable) { ativo = "Não"; }
+            }
+
+            @ativo &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.User) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Date) &nbsp;
+        </dd>
+    </dl>
+</div>
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>

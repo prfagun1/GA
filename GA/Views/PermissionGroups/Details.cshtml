@@ -1,0 +1,69 @@
+﻿@model GALibrary.Models.PermissionGroup
+
+@{
+    ViewData["Title"] = "Detalhes do grupo de permissão " + Model.Name;
+}
+
+<h1>Detalhes do grupo de permissão @Model.Name</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Domain)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Domain) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.AccessType)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String tipoPermissao = "";
+                switch (Model.AccessType)
+                {
+                    case 0: tipoPermissao = "Administração"; break;
+                    case 1: tipoPermissao = "Cadastro"; break;
+                    case 2: tipoPermissao = "Aprovação"; break;
+                    case 3: tipoPermissao = "Atualização"; break;
+                    case 4: tipoPermissao = "Vizualização"; break;
+                }
+            }
+            @tipoPermissao &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Enable)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String ativo = "Sim";
+                if (!Model.Enable) { ativo = "Não"; }
+            }
+            @ativo &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.User) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Date) &nbsp;
+        </dd>
+    </dl>
+</div>
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>

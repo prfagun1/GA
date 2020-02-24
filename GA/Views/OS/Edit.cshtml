@@ -1,0 +1,41 @@
+﻿@model GALibrary.Models.OS
+
+@{
+    ViewData["Title"] = "Edição do sistema operacional " + @Model.Name;
+}
+
+<h1>Edição do sistema operacional @Model.Name</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AccessCommand" class="control-label"></label>
+                <textarea asp-for="AccessCommand" class="form-control multiLine"></textarea>
+                <span asp-validation-for="AccessCommand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Enable" class="control-label"></label>
+                <select asp-for="Enable" class="form-control col-md-4" asp-items="ViewBag.OSEnabled"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

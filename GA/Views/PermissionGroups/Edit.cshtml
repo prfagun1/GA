@@ -1,0 +1,51 @@
+﻿@model GALibrary.Models.PermissionGroup
+
+@{
+    ViewData["Title"] = "Edição do grupo de permissão " + @Model.Name;
+}
+
+<h1>Edição do grupo de permissão @Model.Name</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label asp-for="Domain" class="control-label"></label>
+                    <input asp-for="Domain" class="form-control" />
+                    <span asp-validation-for="Domain" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-8">
+                    <label asp-for="AccessType" class="control-label"></label>
+                    <select asp-for="AccessType" asp-items="ViewBag.AccessType" class="form-control "></select>
+                    <span asp-validation-for="AccessType" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Enable" class="control-label"></label>
+                    <select asp-for="Enable" class="form-control" asp-items="ViewBag.PermissionGroupEnabled"></select>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,241 @@
+﻿@model IEnumerable<GALibrary.Models.Application>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+
+
+@{
+    ViewBag.Title = "Listagem de e-mails de envios de comunicados";
+}
+
+<h1>Listagem de e-mails de envios de comunicados</h1>
+
+
+<br />
+<form asp-controller="AlertMails" asp-action="Index" method="get">
+    <div asp-validation-summary="None" class="text-danger"></div>
+    
+    <div class="row form-group">
+        <div class="col-md-12">
+            <div>
+                Nome ou descrição do cadastro
+            </div>
+            <input type="text" name="nome" value="@ViewBag.nome" class="form-control searchBoxSize">
+        </div>
+
+
+        <p class="small col-md-12"></p>
+
+        <div class="col-md-4">
+            <div>
+                <div>
+                    E-mail
+                </div>
+            </div>
+            <input type="text" name="email" value="@ViewBag.email" class="form-control searchBoxSize">
+        </div>
+
+        <div class="col-md-4">
+            <div>
+                <div>
+                    Padrão
+                </div>
+                @Html.DropDownList("alertMailPadrao", null, htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+
+
+
+        <div class="col-md-4">
+            <div>
+                <div>
+                    Ativo
+                </div>
+                @Html.DropDownList("alertMailEnabled", null, htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12" align="right">
+            <button type="submit" value="Pesquisar" class="btn btn-success">
+                <span class="fa fa-search"></span>
+                Pesquisar
+            </button>
+        </div>
+    </div>
+
+</form>
+
+<br />
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-success">
+        <span class="fa fa-plus"></span>
+        Cadastrar novo e-mail
+    </a>
+</p>
+
+<div class="text-danger font-weight-bold">
+    @Html.Raw(ViewBag.RegistroApagado)
+</div>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="cabecalhos-pesquisa">
+                Padrão
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Padrao",
+                        nome = ViewBag.nome,
+                        email = ViewBag.email,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        alertMailEnabled = ViewBag.alertMailEnabled.SelectedValue,
+                        alertMailPadrao = ViewBag.alertMailPadrao.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Nome
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Nome",
+                        nome = ViewBag.nome,
+                        email = ViewBag.email,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        alertMailEnabled = ViewBag.alertMailEnabled.SelectedValue,
+                        alertMailPadrao = ViewBag.alertMailPadrao.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                E-mail
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Email",
+                        nome = ViewBag.nome,
+                        email = ViewBag.email,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        alertMailEnabled = ViewBag.alertMailEnabled.SelectedValue,
+                        alertMailPadrao = ViewBag.alertMailPadrao.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Ativo
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Ativo",
+                        nome = ViewBag.nome,
+                        email = ViewBag.email,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        alertMailEnabled = ViewBag.alertMailEnabled.SelectedValue,
+                        alertMailPadrao = ViewBag.alertMailPadrao.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.alertMail)
+        {
+        <tr>
+            <td class="cabecalhos-pesquisa">
+                @{
+                    String padrao = "Sim";
+                    if (!item.Default) { padrao = "Não"; }
+                }
+                @padrao
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td class="cabecalhos-pesquisa">
+                @item.Email
+            </td>
+            <td>
+                @{
+                    String enable = "Sim";
+                    if (!item.Enable) { enable = "Não"; }
+                }
+                @enable
+            </td>
+            <td class="cabecalhos-pesquisa">
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+
+                @if (!item.Default)
+                {
+                    @Html.Raw("|")
+                    <a asp-action="Details" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-description="@item.Name" data-toggle="modal" data-target="#confirm-delete">Apagar</a>
+                }
+
+
+
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+<div>
+    @Html.PagedListPager((IPagedList)ViewBag.alertMail, page => Url.Action("Index", new {
+    page = page,
+    nome = ViewBag.nome,
+    email = ViewBag.email,
+    sortOrderOld = ViewBag.sortOrderOld,
+    alertMailEnabled = ViewBag.alertMailEnabled.SelectedValue,
+    alertMailPadrao = ViewBag.alertMailPadrao.SelectedValue,
+}),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        UlElementClasses = new[] { "pagination  justify-content-center" }
+    })
+
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel">Confirmação</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que quer apagar o e-mail <span class="description"></span> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-danger btn-ok text-white">Apagar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        var data = $(e.relatedTarget).data();
+        $('.description', this).text(data.itemDescription);
+        $('.btn-ok', this).data('itemId', data.itemId);
+    });
+
+    $('#confirm-delete').on('click', '.btn-ok', function (e) {
+        var $modalDiv = $(e.delegateTarget);
+        var id = $(this).data('itemId');
+        $modalDiv.addClass('loading');
+        $.post('/AlertMails/Delete/' + id).then(function () {
+            var url = window.location.href.split('?');
+            window.location.href = url[0] + "?registroApagado=true";
+        });
+    });
+
+</script>

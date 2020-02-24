@@ -1,0 +1,20 @@
+﻿@model GALibrary.Models.FileDelete
+
+
+@{
+    ViewBag.Title = "Cadastro de arquivos para apagar";
+}
+
+
+<br />
+<h4>Cadastro de arquivos para apagar</h4>
+<hr />
+
+
+@await Html.PartialAsync("../FilesDelete/CreatePartialView", Model)
+
+
+<div>
+    @Html.ActionLink("Voltar para a lista", "Index")
+</div>
+

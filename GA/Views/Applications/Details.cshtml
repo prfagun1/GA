@@ -1,0 +1,57 @@
+﻿@model GALibrary.Models.Application
+
+@{
+    ViewData["Title"] = "Detalhes da aplicação " + Model.Name;
+}
+
+<h1>Detalhes da aplicação @Model.Name</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Description) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Folder)
+        </dt>
+        <dd class="col-sm-9">
+            @foreach (Folder folder in Model.Folder)
+            {
+                @folder.Path <br />
+            } &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Environment)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Environment.Name) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Enable) &nbsp;
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String ativo = "Sim";
+                if (!Model.Enable) { ativo = "Não"; }
+            }
+
+            @ativo &nbsp;
+        </dd>
+    </dl>
+</div>
+
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>

@@ -1,0 +1,178 @@
+﻿@model GALibrary.Models.UpdateGA
+
+@{
+    ViewData["Title"] = "Detalhes da atualização " + Model.Name;
+}
+
+<h1>Detalhes da atualização @Model.Name</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Description) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Application.Environment)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Application.Environment.Name) &nbsp;
+        </dd>
+        @if (Model.Application.EnvironmentId == 1)
+        {
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Demanda) &nbsp;
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Demanda) &nbsp;
+            </dd>
+        }
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Manual)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String manual = "Sim";
+                if (!Model.Manual) { manual = "Não"; }
+            }
+            @manual &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Application)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Application.Name) &nbsp;
+        </dd>
+        @if (!Model.Manual)
+        {
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.UpdateSteps)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.Raw(@ViewBag.StepResult) &nbsp;
+            </dd>
+        }
+        <dt class="col-sm-3">
+            Agendado para
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Schedule) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.AlertUser)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String alertMail = "Sim";
+                if (!Model.AlertUser) { alertMail = "Não"; }
+            }
+            @alertMail &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.AlertMail)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.AlertMail.Name) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            Arquivo de log
+        </dt>
+        <dd class="col-sm-9">
+            @if (Model.Status == 0)
+            {
+                Html.Raw("A atualização ainda não foi executada");
+            }
+            @if (Model.Status != 0)
+            {
+                <a href="@Url.Action("DownloadLog", new {updateId = Model.Id})">
+                    <span class="fa fa-download btn btn-success"> Download arquivo de log</span>
+                </a>
+            }
+            &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            Arquivo de backup
+        </dt>
+        <dd class="col-sm-9">
+            @if (Model.FilesRemoved == true)
+            {
+                @Html.Raw("Os arquivos de backup desta atualização já foram apagados na rotina de expurgo de dados antigos");
+            }
+            else if (Model.Status != 0 && ViewBag.Backup)
+            {
+                <a href="@Url.Action("DownloadFileBackup", new {updateId = @Model.Id})">
+                    <span class="fa fa-download btn btn-success"> Download arquivo backup</span>
+                </a>
+            }
+            else
+            {
+                @Html.Raw("Não existe arquivo de backup");
+            }
+            &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String status = "";
+                switch (Model.Status)
+                {
+                    case 0:
+                        status = "Pendente";
+                        break;
+                    case 1:
+                        status = "Realizada com sucesso";
+                        break;
+                    case 2:
+                        status = "Realizada com erros";
+                        break;
+                    case 3:
+                        status = "Template";
+                        break;
+                    case 4:
+                        status = "Rascunho";
+                        break;
+                }
+            }
+            @status &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Enable)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String enable = "Sim";
+                if (!Model.Enable) { enable = "Não"; }
+            }
+            @enable &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.User) &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Date) &nbsp;
+        </dd>
+    </dl>
+</div>
+
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>

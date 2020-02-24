@@ -1,0 +1,204 @@
+﻿@model IEnumerable<GALibrary.Models.PermissionGroup>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+
+@{
+    ViewBag.Title = "Listagem de grupos de permissão";
+}
+
+<h1>Listagem de grupos de permissão</h1>
+<br />
+
+<form asp-controller="PermissionGroups" asp-action="Index" method="get">
+    <div asp-validation-summary="None" class="text-danger"></div>
+    <div class="row">
+        <div class="form-group col-md-12">
+            <div>
+                Nome
+            </div>
+            <input type="text" name="searchString" value="@ViewBag.searchString" class="form-control searchBoxSize">
+        </div>
+
+        <div class="col-md-8">
+            <div class="form-group">
+                <div>
+                    Permissão
+                </div>
+                @Html.DropDownList("AccessType", null, "Todos", htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div>
+                    Ativo
+                </div>
+                @Html.DropDownList("PermissionGroupEnabled", null, "Todos", htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12" align="right">
+            <button type="submit" value="Pesquisar" class="btn btn-success">
+                <span class="fa fa-search"></span>
+                Pesquisar
+            </button>
+        </div>
+    </div>
+
+</form>
+
+<br />
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-success">
+        <span class="fa fa-plus"></span>
+        Cadastrar nova permissão de acesso
+    </a>
+</p>
+
+<div class="text-danger font-weight-bold">
+    @Html.Raw(ViewBag.RegistroApagado)
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="cabecalhos-pesquisa">
+                Nome
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Nome",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        AccessType = ViewBag.AccessType.SelectedValue,
+                        PermissionGroupEnabled = ViewBag.PermissionGroupEnabled.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Permissão
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Permissao",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        AccessType = ViewBag.AccessType.SelectedValue,
+                        PermissionGroupEnabled = ViewBag.PermissionGroupEnabled.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Ativo
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Ativo",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        AccessType = ViewBag.AccessType.SelectedValue,
+                        PermissionGroupEnabled = ViewBag.PermissionGroupEnabled.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.permissionGroup)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @{
+                        String tipoPermissao = "";
+                        switch (item.AccessType)
+                        {
+                            case 0: tipoPermissao = "Administração"; break;
+                            case 1: tipoPermissao = "Cadastro"; break;
+                            case 2: tipoPermissao = "Aprovação"; break;
+                            case 3: tipoPermissao = "Atualização"; break;
+                            case 4: tipoPermissao = "Vizualização"; break;
+                        }
+                    }
+
+                    @tipoPermissao
+                </td>
+                <td>
+                    @{
+                        String enable = "Sim";
+                        if (!item.Enable) { enable = "Não"; }
+                    }
+                    @enable
+                </td>
+                <td class="cabecalhos-pesquisa">
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-description="@item.Name" data-toggle="modal" data-target="#confirm-delete">Apagar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div>
+    @Html.PagedListPager((IPagedList)ViewBag.permissionGroup, page => Url.Action("Index", new {
+        page = page,
+        searchString = ViewBag.searchString,
+        sortOrderOld = ViewBag.sortOrderOld,
+        AccessType = ViewBag.AccessType.SelectedValue,
+        PermissionGroupEnabled = ViewBag.PermissionGroupEnabled.SelectedValue,
+    }),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        UlElementClasses = new[] { "pagination  justify-content-center" }
+    })
+
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel">Confirmação</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que quer apagar o grupo de permissão <span class="description"></span> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-danger btn-ok text-white">Apagar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        var data = $(e.relatedTarget).data();
+        $('.description', this).text(data.itemDescription);
+        $('.btn-ok', this).data('itemId', data.itemId);
+    });
+
+    $('#confirm-delete').on('click', '.btn-ok', function (e) {
+        var $modalDiv = $(e.delegateTarget);
+        var id = $(this).data('itemId');
+        $modalDiv.addClass('loading');
+        $.post('/PermissionGroups/Delete/' + id).then(function () {
+            $modalDiv.modal('hide').removeClass('loading');
+            var url = window.location.href.split('?');
+            window.location.href = url[0] + "?registroApagado=true";
+        });
+    });
+</script>
+
+
+

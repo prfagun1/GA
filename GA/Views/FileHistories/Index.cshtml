@@ -1,0 +1,301 @@
+﻿@model IEnumerable<GALibrary.Models.FileHistory>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+
+
+@{
+    ViewBag.Title = "Listagem de arquivos de atualizações";
+}
+
+<h1>Listagem de arquivos de atualizações</h1>
+
+
+<br />
+<form asp-controller="FileHistories" asp-action="Index" method="get">
+    <div asp-validation-summary="None" class="text-danger"></div>
+    <div class="row">
+
+
+        <div class="col-md-8">
+            <div class="form-group">
+                <div>
+                    Aplicação
+                </div>
+                @Html.DropDownList("ApplicationIdFileHistory", null, "", htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    Data inicial
+                </div>
+                <input name="dataInicial" class="form-control searchBoxSize" id="dataInicial" value="@ViewBag.dataInicial">
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    Data final
+                </div>
+                <input name="dataFinal" class="form-control searchBoxSize" id="dataFinal" value="@ViewBag.dataFinal">
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            <div>
+                Demanda
+            </div>
+            <input type="text" name="demanda" value="@ViewBag.demanda" class="form-control searchBoxSize">
+        </div>
+
+        <div class="form-group col-md-4">
+            <div>
+                Usuario
+            </div>
+            <input type="text" name="criadoPor" value="@ViewBag.criadoPor" class="form-control searchBoxSize">
+        </div>
+
+        <div class="form-group col-md-4">
+            <div>
+                Arquivo
+            </div>
+            <input type="text" name="nomeAquivo" value="@ViewBag.nomeAquivo" class="form-control searchBoxSize">
+        </div>
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12" align="right">
+            <button type="submit" value="Pesquisar" class="btn btn-success">
+                <span class="fa fa-search"></span>
+                Pesquisar
+            </button>
+        </div>
+    </div>
+
+</form>
+
+<br />
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="cabecalhos-pesquisa">
+                Data
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Data",
+                        demanda = ViewBag.demanda,
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        ApplicationIdFileHistory = ViewBag.ApplicationIdFileHistory.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa text-center">
+                Demanda
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Demanda",
+                        demanda = ViewBag.demanda,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        ApplicationIdFileHistory = ViewBag.ApplicationIdFileHistory.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Aplicacao
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Aplicacao",
+                        demanda = ViewBag.demanda,
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        ApplicationIdFileHistory = ViewBag.ApplicationIdFileHistory.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa text-center">
+                Atualização
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Atualicacao",
+                        demanda = ViewBag.demanda,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        ApplicationIdFileHistory = ViewBag.ApplicationIdFileHistory.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Arquivo
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Arquivo",
+                        demanda = ViewBag.demanda,
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        ApplicationIdFileHistory = ViewBag.ApplicationIdFileHistory.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa text-center">
+                Tamanho
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Tamanho",
+                        demanda = ViewBag.demanda,
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        ApplicationIdFileHistory = ViewBag.ApplicationIdFileHistory.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Usuário
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Usuario",
+                        demanda = ViewBag.demanda,
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        ApplicationIdFileHistory = ViewBag.ApplicationIdFileHistory.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa text-center">
+                Download
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.fileHistory)
+        {
+        <tr>
+            <td class="cabecalhos-pesquisa">
+                @item.Date
+            </td>
+            <td class="text-center">
+                <a href="http://sun119.unimed-ners.net:8080/TraceGP/Demanda.do?tipoTelaDemanda=todasDemandas&command=popupDemandaAction&idDemanda=@item.Update.Demanda">@item.Update.Demanda</a>
+            </td>
+            <td>
+                @item.File.Application.Name
+            </td>
+            <td class="text-center">
+                <a href="/UpdatesGA/Details/@item.Update.Id" title="@item.Update.Name">@item.Update.Id</a>
+            </td>
+            <td>
+                <a href="/Files/Details/@item.File.Id" title="@item.Folder">@item.FileName</a>
+            </td>
+            <td class="text-center">
+                @{
+                    string tamanho = "";
+                    if (item.Size < 1024)
+                    {
+                        tamanho = item.Size.ToString("#,##0") + " Bytes";
+                    }
+                    else if (item.Size < 1024 * 1024)
+                    {
+                        tamanho = (item.Size / 1024).ToString("#,##0") + " KB";
+                    }
+                    else
+                    {
+                        tamanho = (item.Size / 1024 / 1024).ToString("#,##0") + " MB";
+                    }
+                }
+                @tamanho
+            </td>
+            <td>
+                @item.File.User
+            </td>
+            <td class="cabecalhos-pesquisa text-center">
+                @{
+                    if (item.Update.FilesRemoved == false)
+                    {
+                        @Html.ActionLink("Atualização", "DownloadFile", "Files", new { fileId = item.FileId }, new { @class = "btn btn-success btn-large" })
+                        @Html.Raw(" ");
+                        @Html.ActionLink("Backup", "DownloadFileBackup", "UpdatesGA", new { updateId = item.UpdateId }, new { @class = "btn btn-success btn-large" })
+                    }
+                    else
+                    {
+                        @Html.Raw("Arquivos já apagados");
+                    }
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+<div>
+    @Html.PagedListPager((IPagedList)ViewBag.fileHistory, page => Url.Action("Index", new {
+    page = page,
+    demanda = ViewBag.demanda,
+    sortOrder = ViewBag.sortOrder,
+    sortOrderOld = ViewBag.sortOrderOld,
+    ApplicationIdFileHistory = ViewBag.ApplicationIdFileHistory.SelectedValue,
+    nomeAquivo = ViewBag.nomeAquivo,
+    dataFinal = ViewBag.dataFinal,
+    criadoPor = ViewBag.criadoPor,
+    dataInicial = ViewBag.dataInicial,
+}),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        UlElementClasses = new[] { "pagination  justify-content-center" }
+    })
+
+</div>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#dataInicial").inputmask("date", { jitMasking: true });
+        $("#dataFinal").inputmask("date", { jitMasking: true });
+
+        $("#ApplicationIdFileHistory").select2({
+            placeholder: "Selecione uma aplicação",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+
+    });
+
+</script>

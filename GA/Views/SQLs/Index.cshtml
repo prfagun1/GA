@@ -1,0 +1,325 @@
+﻿@model IEnumerable<GALibrary.Models.SQL>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+
+
+@{
+    ViewBag.Title = "Listagem de scripts de banco";
+}
+
+<h1>Listagem de scripts de banco</h1>
+
+
+<br />
+<form asp-controller="SQLs" asp-action="Index" method="get">
+    <div asp-validation-summary="None" class="text-danger"></div>
+    <div class="row">
+        <div class="form-group col-md-12">
+            <div>
+                Nome
+            </div>
+            <input type="text" name="searchString" value="@ViewBag.searchString" class="form-control searchBoxSize">
+        </div>
+
+
+        <div class="col-md-8">
+            <div class="form-group">
+                <div>
+                    Banco de dados
+                </div>
+                @Html.DropDownList("sqlDatabaseId", null, "", htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    Data inicial
+                </div>
+                <input name="dataInicial" class="form-control searchBoxSize" id="dataInicial" value="@ViewBag.dataInicial">
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    Data final
+                </div>
+                <input name="dataFinal" class="form-control searchBoxSize" id="dataFinal" value="@ViewBag.dataFinal">
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            <div>
+                Usuario
+            </div>
+            <input type="text" name="criadoPor" value="@ViewBag.criadoPor" class="form-control searchBoxSize">
+        </div>
+
+        <div class="form-group col-md-4">
+            <div>
+                Tipo
+            </div>
+            @Html.DropDownList("sqlType", null, htmlAttributes: new { @class = "form-control " })
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <div>
+                    Ativo
+                </div>
+                @Html.DropDownList("sqlEnabled", null, htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12" align="right">
+            <button type="submit" value="Pesquisar" class="btn btn-success">
+                <span class="fa fa-search"></span>
+                Pesquisar
+            </button>
+        </div>
+    </div>
+
+</form>
+
+<br />
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-success">
+        <span class="fa fa-plus"></span>
+        Cadastrar novo script de banco de dados
+    </a>
+</p>
+
+<div class="text-danger font-weight-bold">
+    @Html.Raw(ViewBag.RegistroApagado)
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="cabecalhos-pesquisa">
+                Nome
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Nome",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        sqlEnabled = ViewBag.sqlEnabled.SelectedValue,
+                        sqlDatabaseId = ViewBag.sqlDatabaseId.SelectedValue,
+                        sqlType = ViewBag.sqlType.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Banco de dados
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Banco",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        sqlEnabled = ViewBag.sqlEnabled.SelectedValue,
+                        sqlDatabaseId = ViewBag.sqlDatabaseId.SelectedValue,
+                        sqlType = ViewBag.sqlType.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Data
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Data",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        sqlEnabled = ViewBag.sqlEnabled.SelectedValue,
+                        sqlDatabaseId = ViewBag.sqlDatabaseId.SelectedValue,
+                        sqlType = ViewBag.sqlType.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Usuário
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Usuario",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        sqlEnabled = ViewBag.sqlEnabled.SelectedValue,
+                        sqlDatabaseId = ViewBag.sqlDatabaseId.SelectedValue,
+                        sqlType = ViewBag.sqlType.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Tipo
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Tipo",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        sqlEnabled = ViewBag.sqlEnabled.SelectedValue,
+                        sqlDatabaseId = ViewBag.sqlDatabaseId.SelectedValue,
+                        sqlType = ViewBag.sqlType.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Ativo
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Ativo",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        sqlEnabled = ViewBag.sqlEnabled.SelectedValue,
+                        sqlDatabaseId = ViewBag.sqlDatabaseId.SelectedValue,
+                        sqlType = ViewBag.sqlType.SelectedValue,
+                        nomeAquivo = ViewBag.nomeAquivo,
+                        dataFinal = ViewBag.dataFinal,
+                        criadoPor = ViewBag.criadoPor,
+                        dataInicial = ViewBag.dataInicial
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.sql)
+        {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td class="cabecalhos-pesquisa">
+                @item.Database.Name
+            </td>
+            <td class="cabecalhos-pesquisa">
+                @item.Date
+            </td>
+            <td>
+                @item.User
+            </td>
+            <td class="cabecalhos-pesquisa">
+                @{
+                    String type = "Arquivo";
+                    if (item.Type != 1) { type = "Texto"; }
+                }
+                @type
+            </td>
+            <td class="cabecalhos-pesquisa">
+                @{
+                    String enable = "Sim";
+                    if (!item.Enable) { enable = "Não"; }
+                }
+                @enable
+            </td>
+            <td class="cabecalhos-pesquisa">
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-description="@item.Name" data-toggle="modal" data-target="#confirm-delete">Apagar</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+<div>
+    @Html.PagedListPager((IPagedList)ViewBag.sql, page => Url.Action("Index", new {
+        page = page,
+        searchString = ViewBag.searchString,
+        sortOrderOld = ViewBag.sortOrderOld,
+        sqlEnabled = ViewBag.sqlEnabled.SelectedValue,
+        sqlDatabaseId = ViewBag.sqlDatabaseId.SelectedValue,
+        sqlType = ViewBag.sqlType.SelectedValue,
+        nomeAquivo = ViewBag.nomeAquivo,
+        dataFinal = ViewBag.dataFinal,
+        criadoPor = ViewBag.criadoPor,
+        dataInicial = ViewBag.dataInicial,
+    }),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        UlElementClasses = new[] { "pagination  justify-content-center" }
+    })
+
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel">Confirmação</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que quer apagar o script de banco <span class="description"></span> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-danger btn-ok text-white">Apagar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#dataInicial").inputmask("date", { jitMasking: true });
+        $("#dataFinal").inputmask("date", { jitMasking: true });
+
+        $("#sqlDatabaseId").select2({
+            placeholder: "Selecione um banco de dados",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+
+
+    });
+
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        var data = $(e.relatedTarget).data();
+        $('.description', this).text(data.itemDescription);
+        $('.btn-ok', this).data('itemId', data.itemId);
+    });
+
+    $('#confirm-delete').on('click', '.btn-ok', function (e) {
+        var $modalDiv = $(e.delegateTarget);
+        var id = $(this).data('itemId');
+        $modalDiv.addClass('loading');
+        $.post('/SQLs/Delete/' + id).then(function () {
+            $modalDiv.modal('hide').removeClass('loading');
+            var url = window.location.href.split('?');
+            window.location.href = url[0] + "?registroApagado=true";
+        });
+    });
+</script>

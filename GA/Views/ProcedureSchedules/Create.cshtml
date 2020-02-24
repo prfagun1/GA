@@ -1,0 +1,56 @@
+﻿@model GALibrary.Models.ProcedureSchedule
+
+@{
+    ViewData["Title"] = "Agendamento de procedimentos";
+}
+
+<h1>Agendamento de procedimentos</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProcedureID" class="control-label"></label>
+                <select asp-for="ProcedureID" class="form-control" asp-items="ViewBag.ProcedureID">
+                    <option disabled selected></option>
+                </select>
+            </div>
+            <div class="form-group updateSizeForm ">
+                <label asp-for="Schedule" class="control-label"></label>
+                <input name="Schedule" class="form-control formDateTime" id="Schedule">
+                <span asp-validation-for="Schedule" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $("#Schedule").inputmask("datetime", { jitMasking: true });
+
+        $("#ProcedureID").select2({
+            placeholder: "Selecione um procedimento",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+
+
+    });
+</script>

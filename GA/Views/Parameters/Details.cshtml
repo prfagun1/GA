@@ -1,0 +1,110 @@
+﻿@model GALibrary.Models.Parameter
+
+@{
+    ViewData["Title"] = "Parâmetros de sistema";
+}
+
+<h1>Parâmetros de sistema</h1>
+
+<div>
+    <hr />
+    <p><label class="control-label">Cadastro de caminhos</label></p>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PathBackup)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PathBackup)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PathUpdate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PathUpdate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PathLog)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PathLog)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PathTemp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PathTemp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MailHeader)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MailHeader)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MailFooter)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MailFooter)
+        </dd>
+    </dl>
+
+    <hr />
+    <p><label class="control-label">Cadastro de logs</label></p>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LogLevelApplication)
+        </dt>
+        <dd class="col-sm-10">
+            @{
+                String logLevelApplication = "Somente erros";
+                if (Model.LogLevelApplication == 2) { logLevelApplication = "Debug"; }
+            }
+
+            @logLevelApplication
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LogLevelUpdate)
+        </dt>
+        <dd class="col-sm-10">
+            @{
+                String logLevelUpdate = "Somente erros";
+                if (Model.LogLevelUpdate == 2) { logLevelUpdate = "Debug"; }
+            }
+
+            @logLevelUpdate
+        </dd>
+    </dl>
+
+    <hr />
+    <p><label class="control-label">Outros</label></p>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ItensPage)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ItensPage) &nbsp;
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RetentionTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RetentionTime) dias &nbsp;
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User) &nbsp;
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Datetime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Datetime) &nbsp;
+        </dd>
+    </dl>
+    <hr />
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Editar</a>
+</div>

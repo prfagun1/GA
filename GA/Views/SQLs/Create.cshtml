@@ -1,0 +1,16 @@
+﻿@model GALibrary.Models.SQL
+
+@{
+    ViewBag.Title = "Cadastro de scripts de banco";
+}
+
+<h1>Cadastro de scripts de banco</h1>
+<hr />
+
+@await Html.PartialAsync("../SQLs/CreatePartialView", Model)
+
+<br />
+<div>
+    @Html.ActionLink("Voltar para a lista", "Index")
+</div>
+

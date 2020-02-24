@@ -1,0 +1,78 @@
+﻿@model GALibrary.Models.Command
+
+@{
+    ViewData["Title"] = "Detalhes do comando " + Model.Name;
+}
+
+<h1>Detalhes do comando @Model.Name</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Application)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Application.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Server)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Server.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String tipo = "Todos";
+                if (Model.Type == 2) { tipo = "Atualizações"; }
+                if (Model.Type == 3) { tipo = "Procedimentos"; }
+            }
+
+            @tipo
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.CommandText)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.CommandText)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Enable)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String ativo = "Sim";
+                if (!Model.Enable) { ativo = "Não"; }
+            }
+
+            @ativo
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.User)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+    </dl>
+</div>
+
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>

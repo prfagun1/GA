@@ -1,0 +1,236 @@
+﻿@model GALibrary.Models.FileDelete
+
+<form asp-action="View">
+    <div class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-12">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control listBoxSelectionForm" id="FilesDeleteName"/>
+            <div class="text-danger" id="NameError"></div>
+        </div>
+        <div class="col-md-12 listBoxSelectionForm">
+            <label asp-for="ApplicationId" class="control-label"></label>
+            <select asp-for="ApplicationId" class="form-control listBoxSelectionForm" asp-items="ViewBag.ApplicationIdFileDelete" id="ApplicationIdFileDelete" onchange="GetFolderFiles()">
+                <option disabled selected></option>
+            </select>
+            <div class="text-danger" id="ApplicationIdFileDeleteError"></div>
+        </div>
+
+        <div class="col-md-12">
+            <br />
+        </div>
+
+        <div class="col-md-12  listBoxSelectionform">
+            <table class="listBoxSelectionTable">
+                <tr>
+                    <td>
+                        <p>Diretórios disponíveis</p>
+                        <select asp-for="Application.Folder" class="form-control form-control-range listBoxSelection" id="FoldersDeleteId" asp-items="ViewBag.FileDeleteFolder"></select>
+
+                    </td>
+                    <td align="center" class="listBoxSelectionArrows">
+                        <p><br /></p>
+                        <a onclick="AddFolder()" class="btn"> <span class="fa fa-2x fa-chevron-right" aria-hidden="true"></span> </a>
+                        <a onclick="RemoveFolder()" class="btn"> <span class="fa fa-2x fa-chevron-left" aria-hidden="true"></span> </a>
+                    </td>
+                    <td>
+                        <p>Diretórios selecionados</p>
+                        <select asp-for="FileDeleteFolder" class="form-control listBoxSelection" id="FoldersDelete" asp-items="ViewBag.FileDeleteFolder"></select>
+
+                    </td>
+                </tr>
+
+            </table>
+            <div class="text-danger" id="FoldersDeleteError"></div>
+        </div>
+
+
+        <div class="col-md-12">
+            <label asp-for="FilesDirectory" class="control-label"></label>
+            <textarea asp-for="FilesDirectory" class="form-control listBoxSelectionFormMultiline"></textarea>
+            <div class="text-danger" id="FilesDirectoryError"></div>
+            <p>
+                *Deve ser informado um arquivo ou pasta por linha;<br />
+                *O caminho do arquivo deve ser complementar o diretório já informado;
+            </p>
+        </div>
+
+
+        <div class="form-group col-md-12">
+            <input type="button" value="Cadastrar" class="btn btn-success" onclick="SalvaDados()" />
+        </div>
+
+        <div class="form-group col-md-12 font-weight-bold">
+            <div class="text-success" id="divStatusOK"></div>
+            <div class="text-danger" id="divStatusErro"></div>
+        </div>
+    </div>
+</form>
+
+
+
+<script type="text/javascript">
+
+    GetFolderFiles();
+
+    $(document).ready(function () {
+        $("#ApplicationIdFileDelete").select2({
+            placeholder: "Selecione uma aplicação",
+            minimumInputLength: 0,
+            allowClear: true,
+            theme: "bootstrap4"
+        });
+    });
+
+
+    function AddFolder() {
+        var selectedOpts = $('#FoldersDeleteId option:selected');
+        $('#FoldersDelete').append($(selectedOpts).clone());
+        $(selectedOpts).remove();
+
+        selectSort('#FoldersDelete', 'text', 'asc');
+
+        $("#FoldersDelete option:selected").prop("selected", false)
+        $("#FoldersDeleteId option:selected").prop("selected", false)
+    }
+
+    function RemoveFolder() {
+        var selectedOpts = $('#FoldersDelete option:selected');
+        $('#FoldersDeleteId').append($(selectedOpts).clone());
+        $(selectedOpts).remove();
+
+        selectSort('#FoldersDeleteId', 'text', 'asc');
+
+        $("#FoldersDelete option:selected").prop("selected", false)
+        $("#FoldersDeleteId option:selected").prop("selected", false)
+    }
+
+    function GetFolderFiles() {
+        $("#FoldersDeleteId").empty()
+        $("#FoldersDelete").empty()
+
+        var testaAplicacao1 = $("#ApplicationIdFileDelete option:selected").val();
+        var testaAplicacao2 = $("#ApplicationId option:selected").val();
+
+        if (testaAplicacao1 === '') {
+            applicationID = testaAplicacao2;
+        }
+        else {
+            applicationID = testaAplicacao1;
+        }
+
+        $("#FoldersDeleteId").empty()
+        $.getJSON("/FilesDelete/LoadDropDownList/?applicationID=" + applicationID, function (data) {
+            var items;
+            $.each(data, function (i, data) {
+                items += "<option value='" + data.Id + "'>" + data.Path + "</option>";
+            });
+            $("#FoldersDeleteId").html(items);
+            $("#FolderDeleteId option:selected").prop("selected", false)
+        });
+
+    }
+
+
+    function CleanFields() {
+        document.getElementById("FilesDeleteName").value = "";
+        document.getElementById("ApplicationIdFileDelete").selectedIndex = 0;
+        document.getElementById("FoldersDelete").selectedIndex = 0;
+        document.getElementById("FilesDirectory").value = "";
+
+        document.getElementById("divStatusErro").innerText = "";
+        document.getElementById("divStatusOK").innerText = "";
+
+    }
+
+
+    function SalvaDados() {
+        var valido = true;
+        var fileDeleteName = $('#FilesDeleteName').val();
+        var fileDeleteApplicationId = $('#ApplicationIdFileDelete option:selected').val();
+        var filesDeleteDirectory = $('#FilesDirectory').val();
+        var foldersDelete = document.getElementById("FoldersDelete");
+        var foldersDeleteSize = foldersDelete.options.length;
+
+        $("#NameError").html("");
+        $("#FilesDirectoryError").html("");
+        $("#ApplicationIdFileDeleteError").html("");
+        $("#FoldersDeleteError").html("");
+
+
+        if (fileDeleteName == '') {
+            $("#NameError").html('<p>É necessário informar o nome</p>');
+            valido = false;
+        }
+        if (fileDeleteApplicationId === 'undefined') {
+            $("#ApplicationIdFileDeleteError").html('<p>É necessário selecionar a aplicação</p>');
+            valido = false;
+        }
+        if (filesDeleteDirectory == '') {
+            $("#FilesDirectoryError").html('<p>É necessário informar ao menos um arquivo</p>');
+            valido = false;
+        }
+
+        if (foldersDeleteSize == 0) {
+            $("#FoldersDeleteError").html('<p>É necessário selecionar ao menos uma pasta</p>');
+            valido = false;
+        }
+
+        if (foldersDeleteSize > 5000) {
+            $("#FoldersDeleteError").html('<p>Este campo suporta 5.000 caracteres</p>');
+            valido = false;
+        }
+
+        var fileDeleteFolders = "";
+        for (var i = 0; i < foldersDeleteSize; i++) {
+            fileDeleteFolders += foldersDelete.options[i].value + ' ';
+        }
+
+        if (valido) {
+            var fileData = new FormData();
+            fileData.append('fileDeleteName', fileDeleteName);
+            fileData.append('fileDeleteApplicationId', fileDeleteApplicationId);
+            fileData.append('fileDeleteFolders', fileDeleteFolders);
+            fileData.append('filesDeleteDirectory', filesDeleteDirectory);
+
+
+            $.ajax({
+                type: "POST",
+                async: true,
+                contentType: false,
+                processData: false,
+                url: '/FilesDelete/SalvaDados',
+                data: fileData,
+
+                success: function (result) {
+                    if (result.status == 1) {
+                        CleanFields();
+                        document.getElementById("divStatusOK").innerText = "Cadastro realizado com sucesso.";
+                        document.getElementById("divStatusErro").innerText = "";
+                        GetFolderFiles();
+                    }
+                    else {
+                        document.getElementById("divStatusErro").innerText = result.status;
+                        document.getElementById("divStatusOK").innerText = "";
+                        GetFolderFiles();
+                    }
+                },
+
+                error: function (xhr, err) {
+                    //alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status);
+                    //alert("responseText: " + xhr.responseText);
+                    document.getElementById("divStatusErro").innerText = "readyState: " + xhr.readyState + "\nstatus: " + xhr.status + xhr.responseText;
+                    GetFolderFiles();
+                }
+
+            });
+        }
+
+    }
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

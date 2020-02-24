@@ -1,0 +1,16 @@
+﻿@model GALibrary.Models.File
+
+@{
+    ViewBag.Title = "Cadastro de arquivos";
+}
+
+<br />
+<h4>Cadastro de arquivos</h4>
+<hr />
+
+@await Html.PartialAsync("../Files/CreatePartialView", Model)
+
+<div>
+    @Html.ActionLink("Voltar para a lista", "Index")
+</div>
+

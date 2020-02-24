@@ -1,0 +1,81 @@
+﻿@model GALibrary.Models.File
+
+@{
+    ViewData["Title"] = "Detalhes do cadastro de arquivos " + Model.Name;
+}
+
+<h1>Detalhes do cadastro de arquivos @Model.Name</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.ApplicationId)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Application.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.FileFolder)
+        </dt>
+        <dd class="col-sm-9">
+            @foreach (String folder in ViewBag.FolderIDs) {
+                @folder <br />
+            }
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.FileName)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.FileName)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Enable)
+        </dt>
+        <dd class="col-sm-9">
+            @{
+                String ativo = "Sim";
+                if (!Model.Enable) { ativo = "Não"; }
+            }
+
+            @ativo &nbsp;
+        </dd>
+        <dt class="col-sm-3">
+            Arquivo
+        </dt>
+        <dd class="col-sm-9">
+            @if (Model.FilesRemoved == true)
+            {
+                @Html.Raw("Os arquivos desta atualização já foram apagados na rotina de expurgo de dados antigos.");
+            }
+            else
+            {
+                @Html.ActionLink(Model.FileName, "DownloadFile", "Files", new { fileId = Model.Id }, new { @class = "btn btn-success btn-large" })
+            }
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.User)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+    </dl>
+</div>
+
+<div class="row">
+    <button class="btn btn-link" onclick="goBack()">
+        <span class="fa fa-backward btn btn-success"> Voltar</span>
+    </button>
+</div>

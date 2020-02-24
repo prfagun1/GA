@@ -1,0 +1,198 @@
+﻿@model IEnumerable<GALibrary.Models.Application>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+
+
+@{
+    ViewBag.Title = "Listagem de aplicações";
+}
+
+<h1>Listagem de aplicações</h1>
+
+
+<br />
+<form asp-controller="Applications" asp-action="Index" method="get">
+    <div asp-validation-summary="None" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                Nome ou descrição do cadastro
+            </div>
+            <input type="text" name="searchString" value="@ViewBag.searchString" class="form-control searchBoxSize">
+        </div>
+
+
+        <p class="small col-md-12">
+        </p>
+
+
+        <div class="col-md-8">
+            <div class="form-group">
+                <div>
+                    Ambiente
+                </div>
+                @Html.DropDownList("applicationEnvironmentId", null, "Todos os ambientes", htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <div>
+                    Ativo
+                </div>
+                @Html.DropDownList("applicationEnabled", null, htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12" align="right">
+            <button type="submit" value="Pesquisar" class="btn btn-success">
+                <span class="fa fa-search"></span>
+                Pesquisar
+            </button>
+        </div>
+    </div>
+
+</form>
+
+<br />
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-success">
+        <span class="fa fa-plus"></span>
+        Cadastrar nova aplicação
+    </a>
+</p>
+
+<div class="text-danger font-weight-bold">
+    @Html.Raw(ViewBag.RegistroApagado)
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="cabecalhos-pesquisa">
+                Nome
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Nome",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        applicationEnabled = ViewBag.applicationEnabled.SelectedValue,
+                        applicationEnvironmentId = ViewBag.applicationEnvironmentId.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Ambiente
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Ambiente",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        applicationEnabled = ViewBag.applicationEnabled.SelectedValue,
+                        applicationEnvironmentId = ViewBag.applicationEnvironmentId.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th class="cabecalhos-pesquisa">
+                Ativo
+                <a href="@Url.Action("Index", new {
+                        sortOrder = "Ativo",
+                        searchString = ViewBag.searchString,
+                        sortOrderOld = ViewBag.sortOrderOld,
+                        applicationEnabled = ViewBag.applicationEnabled.SelectedValue,
+                        applicationEnvironmentId = ViewBag.applicationEnvironmentId.SelectedValue
+                    })">
+                    <span class="fa fa-sort"></span>
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.application)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td class="cabecalhos-pesquisa">
+                    @item.Environment.Name
+                </td>
+                <td>
+                    @{
+                        String enable = "Sim";
+                        if (!item.Enable) { enable = "Não"; }
+                    }
+                    @enable
+                </td>
+                <td class="cabecalhos-pesquisa">
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-description="@item.Name" data-toggle="modal"  data-target="#confirm-delete">Apagar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div>
+    @Html.PagedListPager((IPagedList)ViewBag.application, page => Url.Action("Index", new {
+        page = page,
+        searchString = ViewBag.searchString,
+        sortOrderOld = ViewBag.sortOrderOld,
+        applicationEnabled = ViewBag.applicationEnabled.SelectedValue,
+        applicationEnvironmentId = ViewBag.applicationEnvironmentId.SelectedValue,
+    }),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        UlElementClasses = new[] { "pagination  justify-content-center" }
+    })
+
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel">Confirmação</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que quer apagar a aplicação <span class="description"></span> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-danger btn-ok text-white">Apagar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        var data = $(e.relatedTarget).data();
+        $('.description', this).text(data.itemDescription);
+        $('.btn-ok', this).data('itemId', data.itemId);
+    });
+
+    $('#confirm-delete').on('click', '.btn-ok', function (e) {
+        var $modalDiv = $(e.delegateTarget);
+        var id = $(this).data('itemId');
+        $modalDiv.addClass('loading');
+        $.post('/Applications/Delete/' + id).then(function () {
+            var url = window.location.href.split('?');
+            window.location.href = url[0] + "?registroApagado=true";
+        });
+    });
+
+</script>
